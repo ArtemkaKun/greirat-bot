@@ -22,6 +22,7 @@ namespace greirat
 
         private async Task MainAsync ()
         {
+            new DB().Initialize();
             SubscribeOnClientEvents();
             await GetCommandsModule();
             await StartBot();

@@ -8,6 +8,7 @@
     <ItemGroup>
       <PackageReference Include="Discord.Net" Version="2.4.0" />
       <PackageReference Include="SQLite" Version="3.13.0" />
+      <PackageReference Include="System.Data.SQLite.Core" Version="1.0.114.2" />
     </ItemGroup>
 
 </Project>

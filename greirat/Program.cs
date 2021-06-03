@@ -48,7 +48,12 @@ namespace greirat
                 return;
             }
 
-            if (CheckIfTheMessageContainsCommand(message, out int commandPrefixPosition))
+            if (message.Author.IsBot == true)
+            {
+                return;
+            }
+
+            if (CheckIfTheMessageContainsCommand(message, out int commandPrefixPosition) == false)
             {
                 return;
             }
@@ -61,7 +66,7 @@ namespace greirat
         {
             commandPrefixPosition = 0;
 
-            return (message.Author.IsBot == false) && (message.HasCharPrefix(BOT_COMMAND_PREFIX, ref commandPrefixPosition) == true);
+            return message.HasCharPrefix(BOT_COMMAND_PREFIX, ref commandPrefixPosition) == true;
         }
 
         private async Task GetCommandsModule ()

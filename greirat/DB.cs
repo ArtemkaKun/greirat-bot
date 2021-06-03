@@ -7,6 +7,9 @@ namespace greirat
     {
         private const string PATH_TO_DATA_DB_FILE = @"URI=file:data.db";
         private const string NAME_OF_ORDERS_TABLE = "ORDERS";
+        private const string NAME_OF_DATE_COLUMN = "date";
+        private const string NAME_OF_PERSON_NAME_COLUMN = "personName";
+        private const string NAME_OF_ORDER_TEXT_COLUMN = "orderMessage";
         private const string TODAY_DATA_STRING_TEMPLATE = "{0}-{1}-{2}";
 
         public static DB Instance { get; private set; } = new ();
@@ -23,8 +26,7 @@ namespace greirat
 
         public void AddNewOrder (string personName, string orderMessage)
         {
-            
-            CommandExecutor.CommandText = $"INSERT INTO {NAME_OF_ORDERS_TABLE}(date, personName, orderMessage) VALUES('{GetTodayDateInStringForm()}','{personName}', '{orderMessage}')";
+            CommandExecutor.CommandText = $"INSERT INTO {NAME_OF_ORDERS_TABLE}({NAME_OF_DATE_COLUMN}, {NAME_OF_PERSON_NAME_COLUMN}, {NAME_OF_ORDER_TEXT_COLUMN}) VALUES('{GetTodayDateInStringForm()}','{personName}', '{orderMessage}')";
         }
 
         private void Initialize ()
@@ -34,7 +36,7 @@ namespace greirat
 
         private void PrepareDBTables ()
         {
-            CommandExecutor.CommandText = $"CREATE TABLE IF NOT EXISTS {NAME_OF_ORDERS_TABLE}(date TEXT NOT NULL PRIMARY KEY, personName TEXT, orderMessage TEXT)";
+            CommandExecutor.CommandText = $"CREATE TABLE IF NOT EXISTS {NAME_OF_ORDERS_TABLE}({NAME_OF_DATE_COLUMN} TEXT NOT NULL PRIMARY KEY, {NAME_OF_PERSON_NAME_COLUMN} TEXT, {NAME_OF_ORDER_TEXT_COLUMN} TEXT)";
             CommandExecutor.ExecuteNonQuery();
         }
 

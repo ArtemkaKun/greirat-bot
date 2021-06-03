@@ -28,9 +28,23 @@ namespace greirat
         public void AddNewOrder (string personName, string orderMessage)
         {
             CommandExecutor.CommandText = $"INSERT INTO {NAME_OF_ORDERS_TABLE}({NAME_OF_DATE_COLUMN}, {NAME_OF_PERSON_NAME_COLUMN}, {NAME_OF_ORDER_TEXT_COLUMN}) VALUES('{GetTodayDateInStringForm()}','{personName}', '{orderMessage}')";
+            CommandExecutor.ExecuteNonQuery();
         }
-        
-        public List<(string personName, string orderName)>
+
+        public Stack<OrderData> GetTodayOrders ()
+        {
+            CommandExecutor.CommandText = $"SELECT {NAME_OF_PERSON_NAME_COLUMN},{NAME_OF_ORDER_TEXT_COLUMN} FROM {NAME_OF_ORDERS_TABLE} WHERE {NAME_OF_DATE_COLUMN}='{GetTodayDateInStringForm()}'";
+            using SQLiteDataReader executeReader = CommandExecutor.ExecuteReader();
+
+            Stack<OrderData> todayOrders = new ();
+            
+            while (executeReader.Read())
+            {
+                todayOrders.Push(new OrderData(executeReader.GetString(0), executeReader.GetString(1)));
+            }
+
+            return todayOrders;
+        }
 
         private void Initialize ()
         {
@@ -39,7 +53,7 @@ namespace greirat
 
         private void PrepareDBTables ()
         {
-            CommandExecutor.CommandText = $"CREATE TABLE IF NOT EXISTS {NAME_OF_ORDERS_TABLE}({NAME_OF_DATE_COLUMN} TEXT NOT NULL PRIMARY KEY, {NAME_OF_PERSON_NAME_COLUMN} TEXT, {NAME_OF_ORDER_TEXT_COLUMN} TEXT)";
+            CommandExecutor.CommandText = $"CREATE TABLE IF NOT EXISTS {NAME_OF_ORDERS_TABLE}({NAME_OF_DATE_COLUMN} TEXT NOT NULL, {NAME_OF_PERSON_NAME_COLUMN} TEXT, {NAME_OF_ORDER_TEXT_COLUMN} TEXT)";
             CommandExecutor.ExecuteNonQuery();
         }
 

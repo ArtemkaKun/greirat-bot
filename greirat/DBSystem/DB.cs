@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 
 namespace greirat
@@ -28,6 +29,8 @@ namespace greirat
         {
             CommandExecutor.CommandText = $"INSERT INTO {NAME_OF_ORDERS_TABLE}({NAME_OF_DATE_COLUMN}, {NAME_OF_PERSON_NAME_COLUMN}, {NAME_OF_ORDER_TEXT_COLUMN}) VALUES('{GetTodayDateInStringForm()}','{personName}', '{orderMessage}')";
         }
+        
+        public List<(string personName, string orderName)>
 
         private void Initialize ()
         {

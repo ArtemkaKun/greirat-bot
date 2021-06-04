@@ -1,61 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Linq;
+using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 
 namespace greirat
 {
-    public class DB
+    public class DB : DbContext
     {
-        private const string PATH_TO_DATA_DB_FILE = @"URI=file:data.db";
-        private const string NAME_OF_ORDERS_TABLE = "ORDERS";
-        private const string NAME_OF_THE_ID_COLUMN = "ID";
-        private const string NAME_OF_DATE_COLUMN = "date";
-        private const string NAME_OF_PERSON_NAME_COLUMN = "personName";
-        private const string NAME_OF_ORDER_TEXT_COLUMN = "orderMessage";
+        private const string PATH_TO_DATA_DB_FILE = @"Data Source=data.db";
         private const string TODAY_DATA_STRING_TEMPLATE = "{0}-{1}-{2}";
 
         public static DB Instance { get; private set; } = new ();
+        private DbSet<OrderData> Orders { get; set; }
 
-        private SQLiteConnection DBConnection { get; set; } = new(PATH_TO_DATA_DB_FILE);
-        private SQLiteCommand CommandExecutor { get; set; }
-
-        private DB ()
+        protected override void OnConfiguring (DbContextOptionsBuilder options)
         {
-            DBConnection.Open();
-            CommandExecutor = new SQLiteCommand(DBConnection);
-            Initialize();
+            options.UseSqlite(PATH_TO_DATA_DB_FILE);
         }
 
         public void AddNewOrder (string personName, string orderMessage)
         {
-            CommandExecutor.CommandText = $"INSERT INTO {NAME_OF_ORDERS_TABLE}({NAME_OF_DATE_COLUMN}, {NAME_OF_PERSON_NAME_COLUMN}, {NAME_OF_ORDER_TEXT_COLUMN}) VALUES('{GetTodayDateInStringForm()}','{personName}', '{orderMessage}')";
-            CommandExecutor.ExecuteNonQuery();
+            Database.EnsureCreated();
+            Add(new OrderData(GetTodayDateInStringForm(), personName, orderMessage));
+            SaveChanges();
         }
 
         public Queue<OrderData> GetTodayOrders ()
         {
-            CommandExecutor.CommandText = $"SELECT {NAME_OF_THE_ID_COLUMN},{NAME_OF_PERSON_NAME_COLUMN},{NAME_OF_ORDER_TEXT_COLUMN} FROM {NAME_OF_ORDERS_TABLE} WHERE {NAME_OF_DATE_COLUMN}='{GetTodayDateInStringForm()}'";
-            using SQLiteDataReader executeReader = CommandExecutor.ExecuteReader();
-
+            string todayDate = GetTodayDateInStringForm();
+            using IEnumerator<OrderData> todayRecords = Orders.Where(order => order.OrderDate == todayDate).GetEnumerator();
             Queue<OrderData> todayOrders = new ();
             
-            while (executeReader.Read())
+            while (todayRecords.MoveNext() == true)
             {
-                todayOrders.Enqueue(new OrderData(executeReader.GetInt32(0), executeReader.GetString(1), executeReader.GetString(2)));
+                todayOrders.Enqueue(todayRecords.Current);
             }
 
             return todayOrders;
-        }
-
-        private void Initialize ()
-        {
-            PrepareDBTables();
-        }
-
-        private void PrepareDBTables ()
-        {
-            CommandExecutor.CommandText = $"CREATE TABLE IF NOT EXISTS {NAME_OF_ORDERS_TABLE}({NAME_OF_THE_ID_COLUMN} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, {NAME_OF_DATE_COLUMN} TEXT NOT NULL, {NAME_OF_PERSON_NAME_COLUMN} TEXT, {NAME_OF_ORDER_TEXT_COLUMN} TEXT)";
-            CommandExecutor.ExecuteNonQuery();
         }
 
         private string GetTodayDateInStringForm ()

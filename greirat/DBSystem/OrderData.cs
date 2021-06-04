@@ -1,14 +1,21 @@
-﻿namespace greirat
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace greirat
 {
+    [Table("Orders")]
     public class OrderData
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public int OrderID { get; private set; }
+        public string OrderDate { get; private set; }
         public string PersonName { get; private set; }
         public string OrderText { get; private set; }
 
-        public OrderData (int orderId, string personName, string orderText)
+        public OrderData (string orderDate, string personName, string orderText)
         {
-            OrderID = orderId;
+            OrderDate = orderDate;
             PersonName = personName;
             OrderText = orderText;
         }

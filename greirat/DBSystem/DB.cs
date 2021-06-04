@@ -30,12 +30,22 @@ namespace greirat
         public Queue<OrderData> GetTodayOrders ()
         {
             string todayDate = GetTodayDateInStringForm();
-            using IEnumerator<OrderData> todayRecords = Orders.Where(order => order.OrderDate == todayDate).GetEnumerator();
+            
+            return StoreOrdersDataInQueue(Orders.Where(order => order.OrderDate == todayDate).GetEnumerator());
+        }
+
+        public Queue<OrderData> GetTodayOrders (string userName)
+        {
+            return StoreOrdersDataInQueue(Orders.Where(order => order.PersonName == userName).GetEnumerator());
+        }
+
+        private Queue<OrderData> StoreOrdersDataInQueue (IEnumerator<OrderData> records)
+        {
             Queue<OrderData> todayOrders = new ();
             
-            while (todayRecords.MoveNext() == true)
+            while (records.MoveNext() == true)
             {
-                todayOrders.Enqueue(todayRecords.Current);
+                todayOrders.Enqueue(records.Current);
             }
 
             return todayOrders;

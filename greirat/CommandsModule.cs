@@ -22,6 +22,21 @@ namespace greirat
         public Task ShowTodayOrders ()
         {
             Queue<OrderData> todayOrders = DB.Instance.GetTodayOrders();
+            
+            return ReplyAsync(FormOrdersShowData(todayOrders).ToString());
+        }
+
+        [Command("showMyTodayOrders")]
+        [Summary("Shows users today's orders")]
+        public Task ShowUserTodayOrders ()
+        {
+            Queue<OrderData> todayOrders = DB.Instance.GetTodayOrders(Context.Message.Author.Username);
+            
+            return ReplyAsync(FormOrdersShowData(todayOrders).ToString());
+        }
+
+        private StringBuilder FormOrdersShowData (Queue<OrderData> todayOrders)
+        {
             StringBuilder todayOrdersTableBuilder = new();
 
             while (todayOrders.Count > 0)
@@ -29,8 +44,8 @@ namespace greirat
                 OrderData order = todayOrders.Dequeue();
                 todayOrdersTableBuilder.Append($"{order.OrderID.ToString()} {order.PersonName} {order.OrderText} \n");
             }
-            
-            return ReplyAsync(todayOrdersTableBuilder.ToString());
+
+            return todayOrdersTableBuilder;
         }
     }
 }

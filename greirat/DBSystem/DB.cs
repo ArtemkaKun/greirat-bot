@@ -32,16 +32,16 @@ namespace greirat
             CommandExecutor.ExecuteNonQuery();
         }
 
-        public Stack<OrderData> GetTodayOrders ()
+        public Queue<OrderData> GetTodayOrders ()
         {
             CommandExecutor.CommandText = $"SELECT {NAME_OF_THE_ID_COLUMN},{NAME_OF_PERSON_NAME_COLUMN},{NAME_OF_ORDER_TEXT_COLUMN} FROM {NAME_OF_ORDERS_TABLE} WHERE {NAME_OF_DATE_COLUMN}='{GetTodayDateInStringForm()}'";
             using SQLiteDataReader executeReader = CommandExecutor.ExecuteReader();
 
-            Stack<OrderData> todayOrders = new ();
+            Queue<OrderData> todayOrders = new ();
             
             while (executeReader.Read())
             {
-                todayOrders.Push(new OrderData(executeReader.GetInt32(0), executeReader.GetString(1), executeReader.GetString(2)));
+                todayOrders.Enqueue(new OrderData(executeReader.GetInt32(0), executeReader.GetString(1), executeReader.GetString(2)));
             }
 
             return todayOrders;

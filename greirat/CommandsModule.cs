@@ -21,12 +21,12 @@ namespace greirat
         [Summary("Shows today's orders")]
         public Task ShowTodayOrders ()
         {
-            Stack<OrderData> todayOrders = DB.Instance.GetTodayOrders();
+            Queue<OrderData> todayOrders = DB.Instance.GetTodayOrders();
             StringBuilder todayOrdersTableBuilder = new();
 
             while (todayOrders.Count > 0)
             {
-                OrderData order = todayOrders.Pop();
+                OrderData order = todayOrders.Dequeue();
                 todayOrdersTableBuilder.Append($"{order.OrderID.ToString()} {order.PersonName} {order.OrderText} \n");
             }
             

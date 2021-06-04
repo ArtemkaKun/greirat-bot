@@ -27,7 +27,7 @@ namespace greirat
             while (todayOrders.Count > 0)
             {
                 OrderData order = todayOrders.Pop();
-                todayOrdersTableBuilder.Append($"{order.PersonName} {order.OrderText} \n");
+                todayOrdersTableBuilder.Append($"{order.OrderID.ToString()} {order.PersonName} {order.OrderText} \n");
             }
             
             return ReplyAsync(todayOrdersTableBuilder.ToString());

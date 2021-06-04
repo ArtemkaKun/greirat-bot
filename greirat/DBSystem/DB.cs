@@ -8,6 +8,7 @@ namespace greirat
     {
         private const string PATH_TO_DATA_DB_FILE = @"URI=file:data.db";
         private const string NAME_OF_ORDERS_TABLE = "ORDERS";
+        private const string NAME_OF_THE_ID_COLUMN = "ID";
         private const string NAME_OF_DATE_COLUMN = "date";
         private const string NAME_OF_PERSON_NAME_COLUMN = "personName";
         private const string NAME_OF_ORDER_TEXT_COLUMN = "orderMessage";
@@ -33,14 +34,14 @@ namespace greirat
 
         public Stack<OrderData> GetTodayOrders ()
         {
-            CommandExecutor.CommandText = $"SELECT {NAME_OF_PERSON_NAME_COLUMN},{NAME_OF_ORDER_TEXT_COLUMN} FROM {NAME_OF_ORDERS_TABLE} WHERE {NAME_OF_DATE_COLUMN}='{GetTodayDateInStringForm()}'";
+            CommandExecutor.CommandText = $"SELECT {NAME_OF_THE_ID_COLUMN},{NAME_OF_PERSON_NAME_COLUMN},{NAME_OF_ORDER_TEXT_COLUMN} FROM {NAME_OF_ORDERS_TABLE} WHERE {NAME_OF_DATE_COLUMN}='{GetTodayDateInStringForm()}'";
             using SQLiteDataReader executeReader = CommandExecutor.ExecuteReader();
 
             Stack<OrderData> todayOrders = new ();
             
             while (executeReader.Read())
             {
-                todayOrders.Push(new OrderData(executeReader.GetString(0), executeReader.GetString(1)));
+                todayOrders.Push(new OrderData(executeReader.GetInt32(0), executeReader.GetString(1), executeReader.GetString(2)));
             }
 
             return todayOrders;
@@ -53,7 +54,7 @@ namespace greirat
 
         private void PrepareDBTables ()
         {
-            CommandExecutor.CommandText = $"CREATE TABLE IF NOT EXISTS {NAME_OF_ORDERS_TABLE}({NAME_OF_DATE_COLUMN} TEXT NOT NULL, {NAME_OF_PERSON_NAME_COLUMN} TEXT, {NAME_OF_ORDER_TEXT_COLUMN} TEXT)";
+            CommandExecutor.CommandText = $"CREATE TABLE IF NOT EXISTS {NAME_OF_ORDERS_TABLE}({NAME_OF_THE_ID_COLUMN} INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, {NAME_OF_DATE_COLUMN} TEXT NOT NULL, {NAME_OF_PERSON_NAME_COLUMN} TEXT, {NAME_OF_ORDER_TEXT_COLUMN} TEXT)";
             CommandExecutor.ExecuteNonQuery();
         }
 

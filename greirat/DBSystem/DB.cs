@@ -56,6 +56,21 @@ namespace greirat
             return true;
         }
 
+        public bool TryDeleteOrderData (int idOfOrder)
+        {
+            OrderData orderToUpdate = Orders.SingleOrDefault(order => order.OrderID == idOfOrder);
+            
+            if (orderToUpdate == null)
+            {
+                return false;
+            }
+
+            Remove(orderToUpdate);
+            SaveChanges();
+
+            return true;
+        }
+
         private Queue<OrderData> StoreOrdersDataInQueue (IEnumerator<OrderData> records)
         {
             Queue<OrderData> todayOrders = new ();

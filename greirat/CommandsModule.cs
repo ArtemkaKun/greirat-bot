@@ -9,7 +9,7 @@ namespace greirat
     {
         private const string ORDER_WAS_SAVED_MESSAGE = "Order was proceeded";
 
-        [Command("order+")]
+        [Command("makeOrder")]
         [Summary("Creates new order")]
         public Task CreateNewOrder ([Remainder] string orderText)
         {
@@ -42,6 +42,15 @@ namespace greirat
             bool updateOperationResult = DB.Instance.TryUpdateOrderData(idOfOrder, newOrderMessage);
             
             return ReplyAsync(updateOperationResult == true ? "Order was successfully updated" : "Failed to update");
+        }
+
+        [Command("deleteOrder")]
+        [Summary("Deletes order with provided ID")] 
+        public Task DeleteOrder (int idOfOrder)
+        {
+            bool deleteOperationResult = DB.Instance.TryDeleteOrderData(idOfOrder);
+            
+            return ReplyAsync(deleteOperationResult == true ? "Order was successfully removed" : "Failed to remove");
         }
 
         private StringBuilder FormOrdersShowData (Queue<OrderData> todayOrders)

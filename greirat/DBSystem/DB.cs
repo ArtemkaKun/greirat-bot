@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,16 +30,12 @@ namespace greirat
 
         public Queue<OrderData> GetTodayOrders ()
         {
-            string todayDate = GetTodayDateInStringForm();
-            
-            return StoreOrdersDataInQueue(Orders.Where(order => order.OrderDate == todayDate).GetEnumerator());
+            return StoreOrdersDataInQueue(GetTodayOrdersEnumerator());
         }
 
         public Queue<OrderData> GetTodayOrders (string userName)
         {
-            string todayDate = GetTodayDateInStringForm();
-            
-            return StoreOrdersDataInQueue(Orders.Where(order => (order.PersonName == userName) && (order.OrderDate == todayDate)).GetEnumerator());
+            return StoreOrdersDataInQueue(GetTodayOrdersEnumerator(order => order.PersonName == userName));
         }
 
         public bool TryUpdateOrderData (string requestFromUsername, int idOfOrder, string newOrderMessage)
@@ -81,6 +78,18 @@ namespace greirat
             }
 
             return todayOrders;
+        }
+
+        private IEnumerator<OrderData> GetTodayOrdersEnumerator (Expression<Func<OrderData, bool>> additionalCheckExpression = null)
+        {
+            string todayDate = GetTodayDateInStringForm();
+
+            if (additionalCheckExpression == null)
+            {
+                return Orders.Where(order => order.OrderDate == todayDate).GetEnumerator();
+            }
+
+            return Orders.Where(order => order.OrderDate == todayDate).Where(additionalCheckExpression).GetEnumerator();
         }
 
         private string GetTodayDateInStringForm ()

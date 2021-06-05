@@ -39,6 +39,21 @@ namespace greirat
             return StoreOrdersDataInQueue(Orders.Where(order => order.PersonName == userName).GetEnumerator());
         }
 
+        public bool TryUpdateOrderData (int idOfOrder, string newOrderMessage)
+        {
+            OrderData orderToUpdate = Orders.SingleOrDefault(order => order.OrderID == idOfOrder);
+            
+            if (orderToUpdate == null)
+            {
+                return false;
+            }
+
+            orderToUpdate.OrderText = newOrderMessage;
+            SaveChanges();
+            
+            return true;
+        }
+
         private Queue<OrderData> StoreOrdersDataInQueue (IEnumerator<OrderData> records)
         {
             Queue<OrderData> todayOrders = new ();

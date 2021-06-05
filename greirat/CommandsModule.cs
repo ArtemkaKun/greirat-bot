@@ -35,6 +35,15 @@ namespace greirat
             return ReplyAsync(FormOrdersShowData(todayOrders).ToString());
         }
 
+        [Command("updateOrder")]
+        [Summary("Updates order with provided ID")]
+        public Task UpdateUserOrder (int idOfOrder, [Remainder] string newOrderMessage)
+        {
+            bool updateOperationResult = DB.Instance.TryUpdateOrderData(idOfOrder, newOrderMessage);
+            
+            return ReplyAsync(updateOperationResult == true ? "Order was successfully updated" : "Failed to update");
+        }
+
         private StringBuilder FormOrdersShowData (Queue<OrderData> todayOrders)
         {
             StringBuilder todayOrdersTableBuilder = new();

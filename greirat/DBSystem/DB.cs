@@ -41,9 +41,9 @@ namespace greirat
             return StoreOrdersDataInQueue(Orders.Where(order => (order.PersonName == userName) && (order.OrderDate == todayDate)).GetEnumerator());
         }
 
-        public bool TryUpdateOrderData (int idOfOrder, string newOrderMessage)
+        public bool TryUpdateOrderData (string requestFromUsername, int idOfOrder, string newOrderMessage)
         {
-            OrderData orderToUpdate = Orders.SingleOrDefault(order => order.OrderID == idOfOrder);
+            OrderData orderToUpdate = Orders.SingleOrDefault(order => (order.OrderID == idOfOrder) && (order.PersonName == requestFromUsername));
             
             if (orderToUpdate == null)
             {
@@ -56,9 +56,9 @@ namespace greirat
             return true;
         }
 
-        public bool TryDeleteOrderData (int idOfOrder)
+        public bool TryDeleteOrderData (string requestFromUsername, int idOfOrder)
         {
-            OrderData orderToUpdate = Orders.SingleOrDefault(order => order.OrderID == idOfOrder);
+            OrderData orderToUpdate = Orders.SingleOrDefault(order => (order.OrderID == idOfOrder) && (order.PersonName == requestFromUsername));
             
             if (orderToUpdate == null)
             {

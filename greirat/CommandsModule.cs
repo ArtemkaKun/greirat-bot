@@ -39,16 +39,16 @@ namespace greirat
         [Summary("Updates order with provided ID")]
         public Task UpdateUserOrder (int idOfOrder, [Remainder] string newOrderMessage)
         {
-            bool updateOperationResult = DB.Instance.TryUpdateOrderData(idOfOrder, newOrderMessage);
+            bool updateOperationResult = DB.Instance.TryUpdateOrderData(Context.Message.Author.Username, idOfOrder, newOrderMessage);
             
             return ReplyAsync(updateOperationResult == true ? "Order was successfully updated" : "Failed to update");
         }
 
         [Command("deleteOrder")]
-        [Summary("Deletes order with provided ID")] 
+        [Summary("Deletes order with provided ID")]
         public Task DeleteOrder (int idOfOrder)
         {
-            bool deleteOperationResult = DB.Instance.TryDeleteOrderData(idOfOrder);
+            bool deleteOperationResult = DB.Instance.TryDeleteOrderData(Context.Message.Author.Username, idOfOrder);
             
             return ReplyAsync(deleteOperationResult == true ? "Order was successfully removed" : "Failed to remove");
         }

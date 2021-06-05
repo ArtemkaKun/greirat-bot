@@ -14,9 +14,21 @@ namespace greirat
         private const string ORDER_UPDATE_FAILED = "Failed to update order";
         private const string ORDER_DELETE_FAILED = "Failed to remove order";
         private const string NOTHING_TO_SHOW_MESSAGE = "Nothing to show";
+        private const string HELP_MESSAGE = "!makeOrder <text of the order> - creates a new order, automatically assigned with your nickname.\n\n"
+          + "!showMyTodayOrders - shows your today's orders.\n\n"
+          + "!updateOrder <id of the order> <new order's text> - updates order with provided text. **ATTENTION! You can only update orders that were made by you.**\n\n"
+          + "!deleteOrder <id of the order> - deletes order. **ATTENTION! You can only delete orders that were made by you.**\n\n"
+          + "!showTodayOrders - shows all orders that was made today";
 
         private OrderDataAsciiTableConverter AsciiTableConverter { get; set; } = new();
 
+        [Command("help")]
+        [Summary("Shows bot's commands")]
+        public Task ShowHelpMessage ()
+        {
+            return ReplyAsync(HELP_MESSAGE);
+        }
+        
         [Command("makeOrder")]
         [Summary("Creates new order")]
         public Task CreateNewOrder ([Remainder] string orderText)

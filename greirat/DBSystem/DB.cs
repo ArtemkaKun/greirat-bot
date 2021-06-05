@@ -40,7 +40,7 @@ namespace greirat
 
         public bool TryUpdateOrderData (string requestFromUsername, int idOfOrder, string newOrderMessage)
         {
-            OrderData orderToUpdate = Orders.SingleOrDefault(order => (order.OrderID == idOfOrder) && (order.PersonName == requestFromUsername));
+            OrderData orderToUpdate = FindOrder(requestFromUsername, idOfOrder);
             
             if (orderToUpdate == null)
             {
@@ -55,7 +55,7 @@ namespace greirat
 
         public bool TryDeleteOrderData (string requestFromUsername, int idOfOrder)
         {
-            OrderData orderToUpdate = Orders.SingleOrDefault(order => (order.OrderID == idOfOrder) && (order.PersonName == requestFromUsername));
+            OrderData orderToUpdate = FindOrder(requestFromUsername, idOfOrder);
             
             if (orderToUpdate == null)
             {
@@ -96,6 +96,11 @@ namespace greirat
         {
             DateTime todayDay = DateTime.Today;
             return string.Format(TODAY_DATA_STRING_TEMPLATE, todayDay.Day.ToString(), todayDay.Month.ToString(), todayDay.Year.ToString());
+        }
+
+        private OrderData FindOrder (string requestFromUsername, int idOfOrder)
+        {
+            return Orders.SingleOrDefault(order => (order.PersonName == requestFromUsername) && (order.OrderID == idOfOrder));
         }
     }
 }

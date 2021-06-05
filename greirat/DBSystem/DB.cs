@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
 namespace greirat
@@ -13,7 +11,7 @@ namespace greirat
         private const string PATH_TO_DATA_DB_FILE = @"Data Source=data.db";
         private const string TODAY_DATA_STRING_TEMPLATE = "{0}-{1}-{2}";
 
-        public static DB Instance { get; private set; } = new ();
+        public static DB Instance { get; private set; } = new();
         private DbSet<OrderData> Orders { get; set; }
 
         protected override void OnConfiguring (DbContextOptionsBuilder options)
@@ -41,7 +39,7 @@ namespace greirat
         public bool TryUpdateOrderData (string requestFromUsername, int idOfOrder, string newOrderMessage)
         {
             OrderData orderToUpdate = FindOrder(requestFromUsername, idOfOrder);
-            
+
             if (orderToUpdate == null)
             {
                 return false;
@@ -49,14 +47,14 @@ namespace greirat
 
             orderToUpdate.OrderText = newOrderMessage;
             SaveChanges();
-            
+
             return true;
         }
 
         public bool TryDeleteOrderData (string requestFromUsername, int idOfOrder)
         {
             OrderData orderToUpdate = FindOrder(requestFromUsername, idOfOrder);
-            
+
             if (orderToUpdate == null)
             {
                 return false;
@@ -70,8 +68,8 @@ namespace greirat
 
         private Queue<OrderData> StoreOrdersDataInQueue (IEnumerator<OrderData> records)
         {
-            Queue<OrderData> todayOrders = new ();
-            
+            Queue<OrderData> todayOrders = new();
+
             while (records.MoveNext() == true)
             {
                 todayOrders.Enqueue(records.Current);

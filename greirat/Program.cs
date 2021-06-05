@@ -13,7 +13,7 @@ namespace greirat
         private const char BOT_COMMAND_PREFIX = '!';
 
         private DiscordSocketClient Client { get; set; } = new();
-        private CommandService Commands { get; set; } = new ();
+        private CommandService Commands { get; set; } = new();
 
         private static void Main ()
         {

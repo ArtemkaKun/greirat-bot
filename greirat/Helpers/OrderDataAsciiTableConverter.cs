@@ -5,8 +5,6 @@ using greirat.External;
 
 namespace greirat.Helpers
 {
-    /// <summary>
-    /// </summary>
     public class OrderDataAsciiTableConverter
     {
         private const string ORDER_ID_COLUMN_NAME = "OrderID";

@@ -36,7 +36,9 @@ namespace greirat
 
         public Queue<OrderData> GetTodayOrders (string userName)
         {
-            return StoreOrdersDataInQueue(Orders.Where(order => order.PersonName == userName).GetEnumerator());
+            string todayDate = GetTodayDateInStringForm();
+            
+            return StoreOrdersDataInQueue(Orders.Where(order => (order.PersonName == userName) && (order.OrderDate == todayDate)).GetEnumerator());
         }
 
         public bool TryUpdateOrderData (int idOfOrder, string newOrderMessage)

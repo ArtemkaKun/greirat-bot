@@ -3,17 +3,16 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Discord.Commands;
-using greirat.External;
 using ParameterInfo = System.Reflection.ParameterInfo;
 
 namespace greirat.Helpers
 {
-    public class HelpInfoAsciiTableConverter
+    public class HelpInfoAsciiTableConverter : AsciiTableConverter
     {
         private const string COMMAND_COLUMN_NAME = "Command";
         private const string COMMAND_DESCRIPTION_COLUMN_NAME = "Description";
-        private const string DISCORD_FORMATTER_SYMBOLS = "```";
-        private const char BOT_COMMAND_PREFIX = '!';
+        private const string COMMAND_NAME_TEMPLATE = "!{0}{1}";
+        private const string COMMAND_ARGUMENT_NAME_TEMPLATE = " <{0}>";
 
         public StringBuilder HelpInfoInTableForm { get; private set; }
         
@@ -35,7 +34,7 @@ namespace greirat.Helpers
         {
             FillTableWithData(todayOrders);
 
-            return GetAsciiTableBuilder();
+            return GetAsciiTableBuilder(ShowHelpResultsDataTable);
         }
 
         private void FillTableWithData (MethodInfo[] todayOrders)
@@ -49,7 +48,7 @@ namespace greirat.Helpers
         private void CreateTableRowFromOrderData (MethodInfo order)
         {
             DataRow tempDataRow = ShowHelpResultsDataTable.NewRow();
-            tempDataRow[COMMAND_COLUMN_NAME] = $"{BOT_COMMAND_PREFIX}{order.GetCustomAttribute<CommandAttribute>()?.Text}{GetMethodArgumentNames(order)}";
+            tempDataRow[COMMAND_COLUMN_NAME] = string.Format(COMMAND_NAME_TEMPLATE, order.GetCustomAttribute<CommandAttribute>()?.Text, GetMethodArgumentNames(order));
             tempDataRow[COMMAND_DESCRIPTION_COLUMN_NAME] = order.GetCustomAttribute<SummaryAttribute>()?.Text ?? string.Empty;
             ShowHelpResultsDataTable.Rows.Add(tempDataRow);
         }
@@ -60,24 +59,10 @@ namespace greirat.Helpers
 
             foreach (ParameterInfo argument in order.GetParameters())
             {
-                argumentsNamesStringBuilder.Append($" <{argument.Name}>");
+                argumentsNamesStringBuilder.Append(string.Format(COMMAND_ARGUMENT_NAME_TEMPLATE, argument.Name));
             }
             
             return argumentsNamesStringBuilder.ToString();
-        }
-
-        private StringBuilder GetAsciiTableBuilder ()
-        {
-            StringBuilder asciiTableBuilder = AsciiTableGenerator.CreateAsciiTableFromDataTable(ShowHelpResultsDataTable);
-            PrepareBuilderToDiscordFormatting(asciiTableBuilder);
-
-            return asciiTableBuilder;
-        }
-
-        private static void PrepareBuilderToDiscordFormatting (StringBuilder asciiTableBuilder)
-        {
-            asciiTableBuilder.Insert(0, DISCORD_FORMATTER_SYMBOLS);
-            asciiTableBuilder.Append(DISCORD_FORMATTER_SYMBOLS);
         }
     }
 }

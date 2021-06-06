@@ -20,13 +20,14 @@ namespace greirat
           + "!deleteOrder <id of the order> - deletes order. **ATTENTION! You can only delete orders that were made by you.**\n\n"
           + "!showTodayOrders - shows all orders that was made today";
 
-        private OrderDataAsciiTableConverter AsciiTableConverter { get; set; } = new();
-
+        private OrderDataAsciiTableConverter OrdersOutputMaintainer { get; set; } = new();
+        private HelpInfoAsciiTableConverter HelpOutputMaintainer { get; set; } = new();
+        
         [Command("help")]
         [Summary("Shows bot's commands")]
         public Task ShowHelpMessage ()
         {
-            return ReplyAsync(HELP_MESSAGE);
+            return ReplyAsync(HelpOutputMaintainer.HelpInfoInTableForm.ToString());
         }
         
         [Command("makeOrder")]
@@ -44,7 +45,7 @@ namespace greirat
         {
             Queue<OrderData> todayOrders = DB.Instance.GetTodayOrders();
 
-            return ReplyAsync(todayOrders.Count == 0 ? NOTHING_TO_SHOW_MESSAGE : AsciiTableConverter.FormOrdersShowData(todayOrders).ToString());
+            return ReplyAsync(todayOrders.Count == 0 ? NOTHING_TO_SHOW_MESSAGE : OrdersOutputMaintainer.FormOrdersShowData(todayOrders).ToString());
         }
 
         [Command("showMyTodayOrders")]
@@ -53,7 +54,7 @@ namespace greirat
         {
             Queue<OrderData> todayOrders = DB.Instance.GetTodayOrders(Context.Message.Author.Username);
 
-            return ReplyAsync(todayOrders.Count == 0 ? NOTHING_TO_SHOW_MESSAGE : AsciiTableConverter.FormOrdersShowData(todayOrders).ToString());
+            return ReplyAsync(todayOrders.Count == 0 ? NOTHING_TO_SHOW_MESSAGE : OrdersOutputMaintainer.FormOrdersShowData(todayOrders).ToString());
         }
 
         [Command("updateOrder")]

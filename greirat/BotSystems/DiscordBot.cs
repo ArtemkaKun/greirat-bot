@@ -12,28 +12,9 @@ namespace greirat
         private const string ENVIRONMENT_VARIABLE_WITH_BOT_TOKEN = "FOOD_BOT_TOKEN";
         private const char BOT_COMMAND_PREFIX = '!';
 
-    #if DEBUG
-        public bool BypassIsFromBotCheck { get; set; }
-        public DiscordSocketClient BotClient
-        {
-            get
-            {
-                return Client;
-            }
-        }
-
-    #endif
-        
         private DiscordSocketClient Client { get; set; } = new();
         private CommandService Commands { get; set; } = new();
         private BotConfig Config { get; set; } = new();
-
-        #if DEBUG
-            public async Task SendMessageToChat ()
-            {
-                await Client.GetGuild(Config.CurrentConfigData.GuildIDForTests).GetTextChannel(Config.CurrentConfigData.ChannelIDForTests).SendMessageAsync("Test");
-            }
-        #endif
         
         public async Task Initialize ()
         {
@@ -78,13 +59,6 @@ namespace greirat
 
         private bool CheckIfMessageFromBot (SocketUserMessage message)
         {
-        #if DEBUG
-            if (BypassIsFromBotCheck == true)
-            {
-                return false;
-            }
-        #endif
-
             return message.Author.IsBot == true;
         }
 

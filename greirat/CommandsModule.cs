@@ -19,13 +19,15 @@ namespace greirat
         private HelpInfoAsciiTableConverter HelpOutputMaintainer { get; set; } = new();
         
         [Command("help")]
+        [Alias("h")]
         [Summary("Shows bot's commands")]
         public Task ShowHelpMessage ()
         {
-            return ReplyAsync(HelpOutputMaintainer.HelpInfoInTableForm.ToString());
+            return ReplyAsync(HelpOutputMaintainer.HelpInfoInTableForm);
         }
         
         [Command("makeOrder")]
+        [Alias("mko")]
         [Summary("Creates a new order")]
         public Task CreateNewOrder ([Remainder] string orderText)
         {
@@ -35,6 +37,7 @@ namespace greirat
         }
 
         [Command("showMyTodayOrders")]
+        [Alias("shmy")]
         [Summary("Shows your today's orders")]
         public Task ShowUserTodayOrders ()
         {
@@ -44,6 +47,7 @@ namespace greirat
         }
 
         [Command("updateOrder")]
+        [Alias("updo")]
         [Summary("Updates order with provided text.")]
         public Task UpdateUserOrder (int idOfOrder, [Remainder] string newOrderText)
         {
@@ -53,6 +57,7 @@ namespace greirat
         }
 
         [Command("deleteOrder")]
+        [Alias("delo")]
         [Summary("Deletes order.")]
         public Task DeleteOrder (int idOfOrder)
         {
@@ -62,6 +67,7 @@ namespace greirat
         }
 
         [Command("showTodayOrders")]
+        [Alias("shall")]
         [Summary("Shows all orders that was made today")]
         public Task ShowTodayOrders ()
         {

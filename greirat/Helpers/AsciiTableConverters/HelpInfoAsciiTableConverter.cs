@@ -14,14 +14,14 @@ namespace greirat.Helpers
         private const string COMMAND_NAME_TEMPLATE = "!{0}{1}";
         private const string COMMAND_ARGUMENT_NAME_TEMPLATE = " <{0}>";
 
-        public StringBuilder HelpInfoInTableForm { get; private set; }
+        public string HelpInfoInTableForm { get; private set; }
         
         private DataTable ShowHelpResultsDataTable { get; set; } = new();
 
         public HelpInfoAsciiTableConverter ()
         {
             CreatedOrderResultsDataTableColumns();
-            HelpInfoInTableForm = FormOrdersShowData(typeof(CommandsModule).GetMethods().Where(method => method.GetCustomAttribute<CommandAttribute>() != null).ToArray());
+            HelpInfoInTableForm = FormOrdersShowData(typeof(CommandsModule).GetMethods().Where(method => method.GetCustomAttribute<CommandAttribute>() != null).ToArray()).ToString();
         }
 
         private void CreatedOrderResultsDataTableColumns ()

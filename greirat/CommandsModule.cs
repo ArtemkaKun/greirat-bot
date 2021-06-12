@@ -78,9 +78,9 @@ namespace greirat
         
         [Command("setEverydayReminder")]
         [Summary("Sets reminder about of food orders")]
-        public Task SetEverydayReminder (string timeOfDayWhereRemind)
+        public Task SetEverydayReminder (string timeOfDayWhereRemind, string messageToRemind)
         {
-            FoodRemindData newReminderID = DB.Instance.AddNewReminder(Context, timeOfDayWhereRemind);
+            FoodRemindData newReminderID = DB.Instance.AddNewReminder(Context, timeOfDayWhereRemind, messageToRemind);
             new OrdersReminder(newReminderID).TryStartReminderThread();
             
             return ReplyAsync($"Reminder was set on {timeOfDayWhereRemind} everyday");

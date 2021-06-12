@@ -12,12 +12,14 @@ namespace greirat
         public ulong GuildID { get; private set; }
         public ulong ChannelID { get; private set; }
         public string TimeToRemind { get; private set; }
+        public string RemindMessage { get; private set; }
 
-        public FoodRemindData (ulong guildID, ulong channelID, string timeToRemind)
+        public FoodRemindData (ulong guildID, ulong channelID, string timeToRemind, string remindMessage)
         {
             GuildID = guildID;
             ChannelID = channelID;
             TimeToRemind = timeToRemind;
+            RemindMessage = remindMessage;
         }
     }
 }

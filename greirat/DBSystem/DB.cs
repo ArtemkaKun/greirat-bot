@@ -69,10 +69,10 @@ namespace greirat
             return true;
         }
         
-        public FoodRemindData AddNewReminder (SocketCommandContext messageData, string timeToRemind)
+        public FoodRemindData AddNewReminder (SocketCommandContext messageData, string timeToRemind, string messageToRemind)
         {
             Database.EnsureCreated();
-            EntityEntry<FoodRemindData> createdReminder = Add(new FoodRemindData(messageData.Guild.Id, messageData.Message.Channel.Id, timeToRemind));
+            EntityEntry<FoodRemindData> createdReminder = Add(new FoodRemindData(messageData.Guild.Id, messageData.Message.Channel.Id, timeToRemind, messageToRemind));
             SaveChanges();
             return createdReminder.Entity;
         }

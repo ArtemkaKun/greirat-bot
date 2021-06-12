@@ -5,8 +5,6 @@ namespace greirat
 {
     public class OrdersReminder
     {
-        private const string REMINDER_PING_MESSAGE_TEMPLATE = "@here {0}";
-        
         private FoodRemindData ReminderData { get; set; }
         private TimeSpan RemindTime { get; set; }
 
@@ -37,7 +35,7 @@ namespace greirat
             {
                 TimeSpan timeToWait = CalculateTimeToRemind();
                 await Task.Delay(timeToWait);
-                await Program.Bot.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, string.Format(REMINDER_PING_MESSAGE_TEMPLATE, ReminderData.RemindMessage));
+                await Program.Bot.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, ReminderData.RemindMessage);
             }
         }
 

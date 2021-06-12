@@ -75,5 +75,15 @@ namespace greirat
 
             return ReplyAsync(todayOrders.Count == 0 ? NOTHING_TO_SHOW_MESSAGE : OrdersOutputMaintainer.FormOrdersShowData(todayOrders).ToString());
         }
+        
+        [Command("setEverydayReminder")]
+        [Summary("Sets reminder about of food orders")]
+        public Task SetEverydayReminder (string timeOfDayWhereRemind)
+        {
+            FoodRemindData newReminderID = DB.Instance.AddNewReminder(Context, timeOfDayWhereRemind);
+            new OrdersReminder(newReminderID).TryStartReminderThread();
+            
+            return ReplyAsync($"Reminder was set on {timeOfDayWhereRemind} everyday");
+        }
     }
 }

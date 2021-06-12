@@ -4,7 +4,7 @@ namespace greirat
 {
     internal class Program
     {
-        private DiscordBot Bot { get; set; } = new();
+        public static DiscordBot Bot { get; private set; } = new();
         
         private static void Main ()
         {

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace greirat
 {
@@ -13,6 +15,7 @@ namespace greirat
 
         public static DB Instance { get; private set; } = new();
         private DbSet<OrderData> Orders { get; set; }
+        private DbSet<FoodRemindData> RemindersData { get; set; }
 
         protected override void OnConfiguring (DbContextOptionsBuilder options)
         {
@@ -64,6 +67,14 @@ namespace greirat
             SaveChanges();
 
             return true;
+        }
+        
+        public FoodRemindData AddNewReminder (SocketCommandContext messageData, string timeToRemind)
+        {
+            Database.EnsureCreated();
+            EntityEntry<FoodRemindData> createdReminder = Add(new FoodRemindData(messageData.Guild.Id, messageData.Message.Channel.Id, timeToRemind));
+            SaveChanges();
+            return createdReminder.Entity;
         }
 
         private Queue<OrderData> StoreOrdersDataInQueue (IEnumerator<OrderData> records)

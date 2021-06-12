@@ -14,13 +14,17 @@ namespace greirat
 
         private DiscordSocketClient Client { get; set; } = new();
         private CommandService Commands { get; set; } = new();
-        private BotConfig Config { get; set; } = new();
-        
+
         public async Task Initialize ()
         {
             SubscribeOnClientEvents();
             await GetCommandsModule();
             await StartBot();
+        }
+
+        public async Task SendMessage (ulong guildID, ulong channelID, string messageText)
+        {
+            await Client.GetGuild(guildID).GetTextChannel(channelID).SendMessageAsync(messageText);
         }
         
         private void SubscribeOnClientEvents ()

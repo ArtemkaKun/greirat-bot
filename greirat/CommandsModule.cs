@@ -77,6 +77,7 @@ namespace greirat
         }
         
         [Command("setEverydayReminder")]
+        [Alias("remind")]
         [Summary("Sets reminder about of food orders")]
         public Task SetEverydayReminder (string timeOfDayWhereRemind, [Remainder] string messageToRemind)
         {

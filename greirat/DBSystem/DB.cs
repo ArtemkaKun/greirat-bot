@@ -76,6 +76,11 @@ namespace greirat
             return createdReminder.Entity;
         }
 
+        public Stack<FoodRemindData> GetAllRemindersFromDB ()
+        {
+            return new(RemindersData);
+        }
+
         private Queue<OrderData> StoreOrdersDataInQueue (IEnumerator<OrderData> records)
         {
             Queue<OrderData> todayOrders = new();

@@ -14,6 +14,7 @@ namespace greirat
         private const string ORDER_UPDATE_FAILED = "Failed to update order";
         private const string ORDER_DELETE_FAILED = "Failed to remove order";
         private const string NOTHING_TO_SHOW_MESSAGE = "Nothing to show";
+        private const string REMINDER_WAS_SET_MESSAGE = "Reminder was set on {0} everyday (except weekends)";
 
         private OrderDataAsciiTableConverter OrdersOutputMaintainer { get; set; } = new();
         private HelpInfoAsciiTableConverter HelpOutputMaintainer { get; set; } = new();
@@ -84,7 +85,7 @@ namespace greirat
             FoodRemindData newReminderID = Program.DBManager.AddNewReminder(Context, timeOfDayWhereRemind, messageToRemind);
             new OrdersReminder(newReminderID).TryStartReminderThread();
             
-            return ReplyAsync($"Reminder was set on {timeOfDayWhereRemind} everyday");
+            return ReplyAsync(string.Format(REMINDER_WAS_SET_MESSAGE, timeOfDayWhereRemind));
         }
     }
 }

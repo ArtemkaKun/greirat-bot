@@ -31,7 +31,7 @@ namespace greirat
         [Summary("Creates a new order")]
         public Task CreateNewOrder ([Remainder] string orderText)
         {
-            DB.Instance.AddNewOrder(Context.Message.Author.Username, orderText);
+            Program.DBManager.AddNewOrder(Context.Message.Author.Username, orderText);
 
             return ReplyAsync(ORDER_WAS_SAVED_MESSAGE);
         }
@@ -41,7 +41,7 @@ namespace greirat
         [Summary("Shows your today's orders")]
         public Task ShowUserTodayOrders ()
         {
-            Queue<OrderData> todayOrders = DB.Instance.GetTodayOrders(Context.Message.Author.Username);
+            Queue<OrderData> todayOrders = Program.DBManager.GetTodayOrders(Context.Message.Author.Username);
 
             return ReplyAsync(todayOrders.Count == 0 ? NOTHING_TO_SHOW_MESSAGE : OrdersOutputMaintainer.FormOrdersShowData(todayOrders).ToString());
         }
@@ -51,7 +51,7 @@ namespace greirat
         [Summary("Updates order with provided text.")]
         public Task UpdateUserOrder (int idOfOrder, [Remainder] string newOrderText)
         {
-            bool updateOperationResult = DB.Instance.TryUpdateOrderData(Context.Message.Author.Username, idOfOrder, newOrderText);
+            bool updateOperationResult = Program.DBManager.TryUpdateOrderData(Context.Message.Author.Username, idOfOrder, newOrderText);
 
             return ReplyAsync(updateOperationResult == true ? ORDER_WAS_UPDATED_MESSAGE : ORDER_UPDATE_FAILED);
         }
@@ -61,7 +61,7 @@ namespace greirat
         [Summary("Deletes order.")]
         public Task DeleteOrder (int idOfOrder)
         {
-            bool deleteOperationResult = DB.Instance.TryDeleteOrderData(Context.Message.Author.Username, idOfOrder);
+            bool deleteOperationResult = Program.DBManager.TryDeleteOrderData(Context.Message.Author.Username, idOfOrder);
 
             return ReplyAsync(deleteOperationResult == true ? ORDER_WAS_REMOVED : ORDER_DELETE_FAILED);
         }
@@ -71,7 +71,7 @@ namespace greirat
         [Summary("Shows all orders that was made today")]
         public Task ShowTodayOrders ()
         {
-            Queue<OrderData> todayOrders = DB.Instance.GetTodayOrders();
+            Queue<OrderData> todayOrders = Program.DBManager.GetTodayOrders();
 
             return ReplyAsync(todayOrders.Count == 0 ? NOTHING_TO_SHOW_MESSAGE : OrdersOutputMaintainer.FormOrdersShowData(todayOrders).ToString());
         }
@@ -81,7 +81,7 @@ namespace greirat
         [Summary("Sets reminder about of food orders")]
         public Task SetEverydayReminder (string timeOfDayWhereRemind, [Remainder] string messageToRemind)
         {
-            FoodRemindData newReminderID = DB.Instance.AddNewReminder(Context, timeOfDayWhereRemind, messageToRemind);
+            FoodRemindData newReminderID = Program.DBManager.AddNewReminder(Context, timeOfDayWhereRemind, messageToRemind);
             new OrdersReminder(newReminderID).TryStartReminderThread();
             
             return ReplyAsync($"Reminder was set on {timeOfDayWhereRemind} everyday");

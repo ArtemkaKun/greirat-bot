@@ -12,8 +12,7 @@ namespace greirat
     {
         private const string PATH_TO_DATA_DB_FILE = @"Data Source=data.db";
         private const string TODAY_DATA_STRING_TEMPLATE = "{0}-{1}-{2}";
-
-        public static DB Instance { get; private set; } = new();
+        
         private DbSet<OrderData> Orders { get; set; }
         private DbSet<FoodRemindData> RemindersData { get; set; }
 

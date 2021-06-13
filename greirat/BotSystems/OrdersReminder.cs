@@ -41,10 +41,22 @@ namespace greirat
 
         private TimeSpan CalculateTimeToRemind ()
         {
+            if (CheckIfTodayIsWeekend() == true)
+            {
+                return new TimeSpan(24, 0, 0);
+            }
+            
             TimeSpan currentTime = DateTime.Now.TimeOfDay;
             TimeSpan timeToWait = currentTime < RemindTime ? RemindTime.Subtract(currentTime) : DateTime.Today.Subtract(currentTime).TimeOfDay + RemindTime;
             
             return timeToWait;
+        }
+
+        private bool CheckIfTodayIsWeekend ()
+        {
+            DayOfWeek todayDay = DateTime.Today.DayOfWeek;
+            
+            return todayDay is DayOfWeek.Saturday or DayOfWeek.Sunday;
         }
     }
 }

@@ -78,7 +78,8 @@ namespace greirat
 
         public Stack<FoodRemindData> GetAllRemindersFromDB ()
         {
-            return new(RemindersData);
+            Database.EnsureCreated();
+            return new Stack<FoodRemindData>(RemindersData);
         }
 
         private Queue<OrderData> StoreOrdersDataInQueue (IEnumerator<OrderData> records)

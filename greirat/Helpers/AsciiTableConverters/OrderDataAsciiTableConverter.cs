@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 
 namespace greirat.Helpers
@@ -23,6 +24,14 @@ namespace greirat.Helpers
 
             return GetAsciiTableBuilder(ShowOrderResultsDataTable);
         }
+        
+        public StringBuilder FormOrdersSortedShowData (Queue<OrderData> todayOrders)
+        {
+            using IEnumerator<OrderData> todayOrdersSorted = todayOrders.OrderBy(data => data.OrderText).GetEnumerator();
+            FillTableWithData(todayOrdersSorted);
+
+            return GetAsciiTableBuilder(ShowOrderResultsDataTable);
+        }
 
         private void CreatedOrderResultsDataTableColumns ()
         {
@@ -38,6 +47,16 @@ namespace greirat.Helpers
             while (todayOrders.Count > 0)
             {
                 CreateTableRowFromOrderData(todayOrders.Dequeue());
+            }
+        }
+        
+        private void FillTableWithData (IEnumerator<OrderData> todayOrders)
+        {
+            ShowOrderResultsDataTable.Clear();
+
+            while (todayOrders.MoveNext() == true)
+            {
+                CreateTableRowFromOrderData(todayOrders.Current);
             }
         }
 

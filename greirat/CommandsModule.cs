@@ -87,6 +87,7 @@ namespace greirat
         private const string NOTHING_TO_SHOW_MESSAGE = "Nothing to show";
         private const string COMMON_SHOW_COMMAND_NAME = "";
         private const string SORT_SHOW_COMMAND_NAME = "-sort";
+        private const string SUM_SHOW_COMMAND_NAME = "-sum";
         
         private OrderDataAsciiTableConverter OrdersOutputMaintainer { get; set; } = new();
         private Dictionary<string, Func<Queue<OrderData>, StringBuilder>> ShowAllOptionsFunctions { get; set; }
@@ -96,7 +97,8 @@ namespace greirat
             ShowAllOptionsFunctions = new Dictionary<string, Func<Queue<OrderData>, StringBuilder>>
             {
                 {COMMON_SHOW_COMMAND_NAME, OrdersOutputMaintainer.FormOrdersShowData},
-                {SORT_SHOW_COMMAND_NAME, OrdersOutputMaintainer.FormOrdersSortedShowData}
+                {SORT_SHOW_COMMAND_NAME, OrdersOutputMaintainer.FormOrdersSortedShowData},
+                {SUM_SHOW_COMMAND_NAME, OrdersOutputMaintainer.FormOrdersSummaryShowData}
             };
         }
 
@@ -112,6 +114,13 @@ namespace greirat
         public Task ShowTodayOrdersSorted ()
         {
             return ShowOrdersData(SORT_SHOW_COMMAND_NAME);
+        }
+        
+        [Command(SUM_SHOW_COMMAND_NAME)]
+        [Summary("Shows all orders that was made today (summary mode)")]
+        public Task ShowTodayOrdersSummary ()
+        {
+            return ShowOrdersData(SUM_SHOW_COMMAND_NAME);
         }
 
         private Task ShowOrdersData (string command)

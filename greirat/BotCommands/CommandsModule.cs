@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Discord.Commands;
-using greirat.Helpers;
 
 namespace greirat
 {
@@ -15,18 +11,7 @@ namespace greirat
         private const string ORDER_UPDATE_FAILED = "Failed to update order";
         private const string ORDER_DELETE_FAILED = "Failed to remove order";
         private const string ORDER_WAS_SUCCESSFULLY_TEMPLATE_MESSAGE = "Order was successfully ";
-        
-        private OrderDataAsciiTableConverter OrdersOutputMaintainer { get; set; } = new();
-        private HelpInfoAsciiTableConverter HelpOutputMaintainer { get; set; } = new();
-        
-        [Command("help")]
-        [Alias("h")]
-        [Summary("Shows bot's commands")]
-        public Task ShowHelpMessage ()
-        {
-            return ReplyAsync(HelpOutputMaintainer.HelpInfoInTableForm);
-        }
-        
+
         [Command("makeOrder")]
         [Alias("mko")]
         [Summary("Creates a new order")]

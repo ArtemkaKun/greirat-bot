@@ -3,7 +3,8 @@ using Discord.Commands;
 
 namespace greirat
 {
-    public class CommandsModule : ModuleBase<SocketCommandContext>
+    [Group("order")]
+    public class OrderCommandsModule : ModuleBase<SocketCommandContext>
     {
         private const string ORDER_WAS_SAVED_MESSAGE = ORDER_WAS_SUCCESSFULLY_TEMPLATE_MESSAGE + "proceeded";
         private const string ORDER_WAS_UPDATED_MESSAGE = ORDER_WAS_SUCCESSFULLY_TEMPLATE_MESSAGE + "updated";
@@ -12,8 +13,7 @@ namespace greirat
         private const string ORDER_DELETE_FAILED = "Failed to remove order";
         private const string ORDER_WAS_SUCCESSFULLY_TEMPLATE_MESSAGE = "Order was successfully ";
 
-        [Command("makeOrder")]
-        [Alias("mko")]
+        [Command("-mk")]
         [Summary("Creates a new order")]
         public Task CreateNewOrder ([Remainder] string orderText)
         {
@@ -22,8 +22,7 @@ namespace greirat
             return ReplyAsync(ORDER_WAS_SAVED_MESSAGE);
         }
 
-        [Command("updateOrder")]
-        [Alias("updo")]
+        [Command("-upd")]
         [Summary("Updates order with provided text.")]
         public Task UpdateUserOrder (int idOfOrder, [Remainder] string newOrderText)
         {
@@ -32,8 +31,7 @@ namespace greirat
             return ReplyAsync(updateOperationResult == true ? ORDER_WAS_UPDATED_MESSAGE : ORDER_UPDATE_FAILED);
         }
 
-        [Command("deleteOrder")]
-        [Alias("delo")]
+        [Command("-del")]
         [Summary("Deletes order.")]
         public Task DeleteOrder (int idOfOrder)
         {

@@ -23,7 +23,7 @@ namespace greirat.Helpers
         public HelpInfoAsciiTableConverter ()
         {
             CreatedOrderResultsDataTableColumns();
-            HelpInfoInTableForm = FormOrdersShowData(typeof(CommandsModule).GetMethods().Where(method => method.GetCustomAttribute<CommandAttribute>() != null).ToArray()).ToString();
+            HelpInfoInTableForm = FormOrdersShowData(typeof(OrderCommandsModule).GetMethods().Where(method => method.GetCustomAttribute<CommandAttribute>() != null).ToArray()).ToString();
         }
 
         private void CreatedOrderResultsDataTableColumns ()

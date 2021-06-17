@@ -8,7 +8,7 @@ using greirat.Helpers;
 namespace greirat
 {
     [Group("shall")]
-    public class ShowCommandsModule : ModuleBase<SocketCommandContext>
+    public class ShowAllCommandsModule : ModuleBase<SocketCommandContext>
     {
         private const string COMMON_SHOW_COMMAND_NAME = "";
         private const string SORT_SHOW_COMMAND_NAME = "-sort";
@@ -17,7 +17,7 @@ namespace greirat
         private OrderDataAsciiTableConverter OrdersOutputMaintainer { get; set; } = new();
         private Dictionary<string, Func<Queue<OrderData>, StringBuilder>> ShowAllOptionsFunctions { get; set; }
 
-        public ShowCommandsModule ()
+        public ShowAllCommandsModule ()
         {
             ShowAllOptionsFunctions = new Dictionary<string, Func<Queue<OrderData>, StringBuilder>>
             {

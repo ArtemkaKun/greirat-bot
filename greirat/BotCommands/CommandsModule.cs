@@ -37,16 +37,6 @@ namespace greirat
             return ReplyAsync(ORDER_WAS_SAVED_MESSAGE);
         }
 
-        [Command("showMyTodayOrders")]
-        [Alias("shmy")]
-        [Summary("Shows your today's orders")]
-        public Task ShowUserTodayOrders ()
-        {
-            Queue<OrderData> todayOrders = Program.DBManager.GetTodayOrders(Context.Message.Author.Username);
-
-            return ReplyAsync(todayOrders.Count == 0 ? CommandsDatabase.NOTHING_TO_SHOW_MESSAGE : OrdersOutputMaintainer.FormOrdersShowData(todayOrders).ToString());
-        }
-
         [Command("updateOrder")]
         [Alias("updo")]
         [Summary("Updates order with provided text.")]

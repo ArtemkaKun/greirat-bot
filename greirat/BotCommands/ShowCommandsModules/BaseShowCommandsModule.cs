@@ -26,10 +26,8 @@ namespace greirat
             };
         }
         
-        protected Task ShowOrdersData (string command)
+        protected Task ShowOrdersData (string command, Queue<OrderData> todayOrders)
         {
-            Queue<OrderData> todayOrders = Program.DBManager.GetTodayOrders();
-
             return ReplyAsync(todayOrders.Count == 0 ? CommandsDatabase.NOTHING_TO_SHOW_MESSAGE : ShowAllOptionsFunctions[command]?.Invoke(todayOrders).ToString());
         }
     }

@@ -7,17 +7,16 @@ using greirat.Helpers;
 
 namespace greirat
 {
-    [Group("shall")]
-    public class ShowAllCommandsModule : ModuleBase<SocketCommandContext>
+    public abstract class BaseShowCommandsModule : ModuleBase<SocketCommandContext>
     {
-        private const string COMMON_SHOW_COMMAND_NAME = "";
-        private const string SORT_SHOW_COMMAND_NAME = "-sort";
-        private const string SUM_SHOW_COMMAND_NAME = "-sum";
+        protected const string COMMON_SHOW_COMMAND_NAME = "";
+        protected const string SORT_SHOW_COMMAND_NAME = "-sort";
+        protected const string SUM_SHOW_COMMAND_NAME = "-sum";
         
         private OrderDataAsciiTableConverter OrdersOutputMaintainer { get; set; } = new();
         private Dictionary<string, Func<Queue<OrderData>, StringBuilder>> ShowAllOptionsFunctions { get; set; }
 
-        public ShowAllCommandsModule ()
+        protected BaseShowCommandsModule ()
         {
             ShowAllOptionsFunctions = new Dictionary<string, Func<Queue<OrderData>, StringBuilder>>
             {
@@ -26,29 +25,8 @@ namespace greirat
                 {SUM_SHOW_COMMAND_NAME, OrdersOutputMaintainer.FormOrdersSummaryShowData}
             };
         }
-
-        [Command(COMMON_SHOW_COMMAND_NAME)]
-        [Summary("Shows all orders that was made today")]
-        public Task ShowTodayOrders ()
-        {
-            return ShowOrdersData(COMMON_SHOW_COMMAND_NAME);
-        }
         
-        [Command(SORT_SHOW_COMMAND_NAME)]
-        [Summary("Shows all orders that was made today (sorted a -> z)")]
-        public Task ShowTodayOrdersSorted ()
-        {
-            return ShowOrdersData(SORT_SHOW_COMMAND_NAME);
-        }
-        
-        [Command(SUM_SHOW_COMMAND_NAME)]
-        [Summary("Shows all orders that was made today (summary mode)")]
-        public Task ShowTodayOrdersSummary ()
-        {
-            return ShowOrdersData(SUM_SHOW_COMMAND_NAME);
-        }
-
-        private Task ShowOrdersData (string command)
+        protected Task ShowOrdersData (string command)
         {
             Queue<OrderData> todayOrders = Program.DBManager.GetTodayOrders();
 

@@ -10,7 +10,7 @@ namespace greirat
         
         public static DiscordBot Bot { get; private set; } = new();
         public static DB DBManager { get; private set; } = new();
-        public static List<OrdersReminder> ActiveReminders { get; private set; } = new();
+        public static List<OrdersReminder> ActiveReminders { get; private set; }
         
         private static void Main ()
         {
@@ -26,16 +26,30 @@ namespace greirat
 
         private static async Task StartReminders ()
         {
-            Stack<FoodRemindData> remindersCollection = DBManager.GetAllRemindersFromDB();
+            CollectRemindersFromDB();
+            StartAllReminders();
+            Console.WriteLine(REMINDERS_WERE_ACTIVATED_MESSAGE);
 
+            await Task.Yield();
+        }
+
+        private static void CollectRemindersFromDB ()
+        {
+            Stack<FoodRemindData> remindersCollection = DBManager.GetAllRemindersFromDB();
+            ActiveReminders = new List<OrdersReminder>(remindersCollection.Count);
+            
             while (remindersCollection.Count > 0)
             {
                 ActiveReminders.Add(new OrdersReminder(remindersCollection.Pop()));
             }
-            
-            Console.WriteLine(REMINDERS_WERE_ACTIVATED_MESSAGE);
+        }
 
-            await Task.Yield();
+        private static void StartAllReminders ()
+        {
+            for (int reminderPointer = 0; reminderPointer < ActiveReminders.Count; reminderPointer++)
+            {
+                ActiveReminders[reminderPointer].TryStartReminderThread();
+            }
         }
     }
 }   

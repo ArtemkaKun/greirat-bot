@@ -11,7 +11,7 @@ namespace greirat
         private const string REMINDER_INFO_MESSAGE = "```Every day (except weekends) at {0} send message '{1}' to the chat```";
 
         private static List<OrdersReminder> ActiveReminders { get; set; }
-        
+
         public async Task StartRemindersFromDB ()
         {
             CollectRemindersFromDB();
@@ -23,11 +23,11 @@ namespace greirat
 
         public bool TryStartNewReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind)
         {
-            if (string.IsNullOrEmpty(GetReminderInfo(context.Guild.Id, context.Message.Channel.Id)) == false)
+            if (FindReminder(context.Guild.Id, context.Message.Channel.Id) == null)
             {
                 return false;
             }
-            
+
             FoodRemindData newReminderID = Program.DBManager.AddNewReminder(context, timeOfDayWhereRemind, messageToRemind);
             OrdersReminder newReminder = new(newReminderID);
             ActiveReminders.Add(newReminder);
@@ -38,24 +38,30 @@ namespace greirat
 
         public string GetReminderInfo (ulong guildID, ulong channelID)
         {
-            for (int reminderPointer = 0; reminderPointer < ActiveReminders.Count; reminderPointer++)
+            FoodRemindData channelReminderInfo = FindReminder(guildID, channelID).ReminderData;
+
+            return channelReminderInfo == null ? null : string.Format(REMINDER_INFO_MESSAGE, channelReminderInfo.TimeToRemind, channelReminderInfo.RemindMessage);
+        }
+
+        public bool TryDeleteChannelReminder (ulong guildID, ulong channelID)
+        {
+            OrdersReminder channelReminderInfo = FindReminder(guildID, channelID);
+
+            if (channelReminderInfo == null)
             {
-                FoodRemindData currentReminderData = ActiveReminders[reminderPointer].ReminderData;
-                
-                if ((currentReminderData.GuildID == guildID) && (currentReminderData.ChannelID == channelID))
-                {
-                    return string.Format(REMINDER_INFO_MESSAGE, currentReminderData.TimeToRemind, currentReminderData.RemindMessage);
-                }
+                return false;
             }
 
-            return null;
+            ActiveReminders.Remove(channelReminderInfo);
+
+            return true;
         }
 
         private void CollectRemindersFromDB ()
         {
             Stack<FoodRemindData> remindersCollection = Program.DBManager.GetAllRemindersFromDB();
             ActiveReminders = new List<OrdersReminder>(remindersCollection.Count);
-            
+
             while (remindersCollection.Count > 0)
             {
                 ActiveReminders.Add(new OrdersReminder(remindersCollection.Pop()));
@@ -68,6 +74,21 @@ namespace greirat
             {
                 ActiveReminders[reminderPointer].TryStartReminderThread();
             }
+        }
+
+        private OrdersReminder FindReminder (ulong guildID, ulong channelID)
+        {
+            for (int reminderPointer = 0; reminderPointer < ActiveReminders.Count; reminderPointer++)
+            {
+                OrdersReminder currentReminder = ActiveReminders[reminderPointer];
+
+                if ((currentReminder.ReminderData.GuildID == guildID) && (currentReminder.ReminderData.ChannelID == channelID))
+                {
+                    return currentReminder;
+                }
+            }
+
+            return null;
         }
     }
 }

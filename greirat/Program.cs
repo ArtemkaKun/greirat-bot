@@ -6,7 +6,7 @@ namespace greirat
     {
         public static DiscordBot Bot { get; private set; } = new();
         public static DB DBManager { get; private set; } = new();
-        public static RemindersManager RemindersOrchestrator { get; private set; }
+        public static RemindersManager RemindersOrchestrator { get; private set; } = new();
         
         private static void Main ()
         {

@@ -84,6 +84,11 @@ namespace greirat
             return new(RemindersData);
         }
 
+        public bool CheckIfSimilarReminderAlreadyExists (SocketCommandContext messageData)
+        {
+            return RemindersData.Any(reminder => (reminder.GuildID == messageData.Guild.Id) && (reminder.ChannelID == messageData.Message.Channel.Id));
+        }
+
         private Queue<OrderData> StoreOrdersDataInQueue (IEnumerator<OrderData> records)
         {
             Queue<OrderData> todayOrders = new();

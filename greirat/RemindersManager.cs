@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Discord.Commands;
 
 namespace greirat
 {
     public class RemindersManager
     {
         private const string REMINDERS_WERE_ACTIVATED_MESSAGE = "All reminders from DB were activated";
-        
+
         public static List<OrdersReminder> ActiveReminders { get; private set; }
         
         public async Task StartRemindersFromDB ()
@@ -19,7 +20,22 @@ namespace greirat
             await Task.Yield();
         }
 
-        private static void CollectRemindersFromDB ()
+        public bool TryStartNewReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind)
+        {
+            if (Program.DBManager.CheckIfSimilarReminderAlreadyExists(context) == true)
+            {
+                return false;
+            }
+            
+            FoodRemindData newReminderID = Program.DBManager.AddNewReminder(context, timeOfDayWhereRemind, messageToRemind);
+            OrdersReminder newReminder = new(newReminderID);
+            ActiveReminders.Add(newReminder);
+            newReminder.TryStartReminderThread();
+
+            return true;
+        }
+
+        private void CollectRemindersFromDB ()
         {
             Stack<FoodRemindData> remindersCollection = Program.DBManager.GetAllRemindersFromDB();
             ActiveReminders = new List<OrdersReminder>(remindersCollection.Count);
@@ -30,7 +46,7 @@ namespace greirat
             }
         }
 
-        private static void StartAllReminders ()
+        private void StartAllReminders ()
         {
             for (int reminderPointer = 0; reminderPointer < ActiveReminders.Count; reminderPointer++)
             {

@@ -8,6 +8,7 @@ namespace greirat
     {
         private const string REMINDER_WAS_SET_MESSAGE = "Reminder was set on {0} everyday (except weekends)";
         private const string CANNOT_SET_REMINDER_MESSAGE = "Cannot set reminder for this channel";
+        private const string NO_REMINDER_IN_CHANNEL_MESSAGE = "No reminders in channet yet";
         
         [Command("-set")]
         [Summary("Sets reminder about of food orders")]
@@ -16,6 +17,15 @@ namespace greirat
             bool isOperationSucceed = Program.RemindersOrchestrator.TryStartNewReminder(Context, timeOfDayWhereRemind, messageToRemind);
 
             return ReplyAsync(isOperationSucceed == true ? string.Format(REMINDER_WAS_SET_MESSAGE, timeOfDayWhereRemind) : CANNOT_SET_REMINDER_MESSAGE);
+        }
+        
+        [Command("-show")]
+        [Summary("Show reminder data for this channel")]
+        public Task ShowChannelReminderData ()
+        {
+            string infoAboutReminder = Program.RemindersOrchestrator.GetReminderInfo(Context.Guild.Id, Context.Message.Channel.Id);
+
+            return ReplyAsync(string.IsNullOrEmpty(infoAboutReminder) == true ? NO_REMINDER_IN_CHANNEL_MESSAGE : infoAboutReminder);
         }
     }
 }

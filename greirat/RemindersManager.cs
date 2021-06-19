@@ -9,7 +9,7 @@ namespace greirat
     {
         private const string REMINDERS_WERE_ACTIVATED_MESSAGE = "All reminders from DB were activated";
 
-        public static List<OrdersReminder> ActiveReminders { get; private set; }
+        private static List<OrdersReminder> ActiveReminders { get; set; }
         
         public async Task StartRemindersFromDB ()
         {
@@ -33,6 +33,21 @@ namespace greirat
             newReminder.TryStartReminderThread();
 
             return true;
+        }
+
+        public string GetReminderInfo (ulong guildID, ulong channelID)
+        {
+            for (int reminderPointer = 0; reminderPointer < ActiveReminders.Count; reminderPointer++)
+            {
+                FoodRemindData currentReminderData = ActiveReminders[reminderPointer].ReminderData;
+                
+                if ((currentReminderData.GuildID == guildID) && (currentReminderData.ChannelID == channelID))
+                {
+                    return $"```Every day (except weekends) at {currentReminderData.TimeToRemind} send message '{currentReminderData.RemindMessage}' to the chat```";
+                }
+            }
+
+            return null;
         }
 
         private void CollectRemindersFromDB ()

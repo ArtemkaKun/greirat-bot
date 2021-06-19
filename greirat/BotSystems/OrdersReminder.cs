@@ -5,12 +5,13 @@ namespace greirat
 {
     public class OrdersReminder
     {
-        private FoodRemindData ReminderData { get; set; }
+        public FoodRemindData ReminderData { get; private set; }
+        
         private TimeSpan RemindTime { get; set; }
 
-        public OrdersReminder (FoodRemindData reminderId)
+        public OrdersReminder (FoodRemindData reminderData)
         {
-            ReminderData = reminderId;
+            ReminderData = reminderData;
         }
 
         public void TryStartReminderThread ()

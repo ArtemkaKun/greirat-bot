@@ -12,7 +12,7 @@ namespace greirat
     {
         private const string PATH_TO_DATA_DB_FILE = @"Data Source=data.db";
         private const string TODAY_DATA_STRING_TEMPLATE = "{0}-{1}-{2}";
-        
+
         private DbSet<OrderData> Orders { get; set; }
         private DbSet<FoodRemindData> RemindersData { get; set; }
 
@@ -21,9 +21,13 @@ namespace greirat
             options.UseSqlite(PATH_TO_DATA_DB_FILE);
         }
 
-        public void AddNewOrder (string personName, string orderMessage)
+        public void EnsureThatDBIsCreated ()
         {
             Database.EnsureCreated();
+        }
+
+        public void AddNewOrder (string personName, string orderMessage)
+        {
             Add(new OrderData(GetTodayDateInStringForm(), personName, orderMessage));
             SaveChanges();
         }
@@ -67,10 +71,9 @@ namespace greirat
 
             return true;
         }
-        
+
         public FoodRemindData AddNewReminder (SocketCommandContext messageData, string timeToRemind, string messageToRemind)
         {
-            Database.EnsureCreated();
             EntityEntry<FoodRemindData> createdReminder = Add(new FoodRemindData(messageData.Guild.Id, messageData.Message.Channel.Id, timeToRemind, messageToRemind));
             SaveChanges();
             return createdReminder.Entity;
@@ -78,8 +81,7 @@ namespace greirat
 
         public Stack<FoodRemindData> GetAllRemindersFromDB ()
         {
-            Database.EnsureCreated();
-            return new Stack<FoodRemindData>(RemindersData);
+            return new(RemindersData);
         }
 
         private Queue<OrderData> StoreOrdersDataInQueue (IEnumerator<OrderData> records)

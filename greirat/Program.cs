@@ -20,6 +20,7 @@ namespace greirat
         private static async Task MainAsync ()
         {
             await Bot.Initialize();
+            DBManager.EnsureThatDBIsCreated();
             await StartReminders();
             await Task.Delay(-1);
         }

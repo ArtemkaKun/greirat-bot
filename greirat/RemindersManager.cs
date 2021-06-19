@@ -8,6 +8,7 @@ namespace greirat
     public class RemindersManager
     {
         private const string REMINDERS_WERE_ACTIVATED_MESSAGE = "All reminders from DB were activated";
+        private const string REMINDER_INFO_MESSAGE = "```Every day (except weekends) at {0} send message '{1}' to the chat```";
 
         private static List<OrdersReminder> ActiveReminders { get; set; }
         
@@ -43,7 +44,7 @@ namespace greirat
                 
                 if ((currentReminderData.GuildID == guildID) && (currentReminderData.ChannelID == channelID))
                 {
-                    return $"```Every day (except weekends) at {currentReminderData.TimeToRemind} send message '{currentReminderData.RemindMessage}' to the chat```";
+                    return string.Format(REMINDER_INFO_MESSAGE, currentReminderData.TimeToRemind, currentReminderData.RemindMessage);
                 }
             }
 

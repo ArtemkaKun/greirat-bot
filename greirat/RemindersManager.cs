@@ -22,7 +22,7 @@ namespace greirat
 
         public bool TryStartNewReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind)
         {
-            if (Program.DBManager.CheckIfSimilarReminderAlreadyExists(context) == true)
+            if (string.IsNullOrEmpty(GetReminderInfo(context.Guild.Id, context.Message.Channel.Id)) == false)
             {
                 return false;
             }

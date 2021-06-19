@@ -23,7 +23,7 @@ namespace greirat
 
         public bool TryStartNewReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind)
         {
-            if (FindReminder(context.Guild.Id, context.Message.Channel.Id) == null)
+            if (FindReminder(context.Guild.Id, context.Message.Channel.Id) != null)
             {
                 return false;
             }
@@ -53,6 +53,7 @@ namespace greirat
             }
 
             ActiveReminders.Remove(channelReminderInfo);
+            Program.DBManager.DeleteReminder(channelReminderInfo.ReminderData);
 
             return true;
         }

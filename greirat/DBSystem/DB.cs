@@ -84,6 +84,12 @@ namespace greirat
             return new(RemindersData);
         }
 
+        public void DeleteReminder (FoodRemindData reminderDataToDelete)
+        {
+            Remove(reminderDataToDelete);
+            SaveChanges();
+        }
+        
         private Queue<OrderData> StoreOrdersDataInQueue (IEnumerator<OrderData> records)
         {
             Queue<OrderData> todayOrders = new();

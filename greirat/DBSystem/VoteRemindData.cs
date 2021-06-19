@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace greirat
 {
     [Table("FoodReminders")]
-    public class FoodRemindData
+    public class VoteRemindData
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
@@ -14,7 +14,7 @@ namespace greirat
         public string TimeToRemind { get; private set; }
         public string RemindMessage { get; private set; }
 
-        public FoodRemindData (ulong guildID, ulong channelID, string timeToRemind, string remindMessage)
+        public VoteRemindData (ulong guildID, ulong channelID, string timeToRemind, string remindMessage)
         {
             GuildID = guildID;
             ChannelID = channelID;

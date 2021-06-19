@@ -12,7 +12,7 @@ namespace greirat
         private const string REMINDER_WAS_REMOVED_MESSAGE = "Reminder was successfully removed";
         
         [Command("-set")]
-        [Summary("Sets reminder about of food orders")]
+        [Summary("Sets reminder about of food vote")]
         public Task SetEverydayReminder (string timeOfDayWhereRemind, [Remainder] string messageToRemind)
         {
             bool isOperationSucceed = Program.RemindersOrchestrator.TryStartNewReminder(Context, timeOfDayWhereRemind, messageToRemind);

@@ -10,7 +10,7 @@ namespace greirat
         private const string REMINDERS_WERE_ACTIVATED_MESSAGE = "All reminders from DB were activated";
         private const string REMINDER_INFO_MESSAGE = "```Every day (except weekends) at {0} send message '{1}' to the chat```";
 
-        private static List<OrdersReminder> ActiveReminders { get; set; }
+        private static List<VoteReminder> ActiveReminders { get; set; }
 
         public async Task StartRemindersFromDB ()
         {
@@ -28,8 +28,8 @@ namespace greirat
                 return false;
             }
 
-            FoodRemindData newReminderID = Program.DBManager.AddNewReminder(context, timeOfDayWhereRemind, messageToRemind);
-            OrdersReminder newReminder = new(newReminderID);
+            VoteRemindData newReminderID = Program.DBManager.AddNewReminder(context, timeOfDayWhereRemind, messageToRemind);
+            VoteReminder newReminder = new(newReminderID);
             ActiveReminders.Add(newReminder);
             newReminder.TryStartReminderThread();
 
@@ -38,14 +38,14 @@ namespace greirat
 
         public string GetReminderInfo (ulong guildID, ulong channelID)
         {
-            FoodRemindData channelReminderInfo = FindReminder(guildID, channelID).ReminderData;
+            VoteRemindData channelReminderInfo = FindReminder(guildID, channelID).ReminderData;
 
             return channelReminderInfo == null ? null : string.Format(REMINDER_INFO_MESSAGE, channelReminderInfo.TimeToRemind, channelReminderInfo.RemindMessage);
         }
 
         public bool TryDeleteChannelReminder (ulong guildID, ulong channelID)
         {
-            OrdersReminder channelReminderInfo = FindReminder(guildID, channelID);
+            VoteReminder channelReminderInfo = FindReminder(guildID, channelID);
 
             if (channelReminderInfo == null)
             {
@@ -60,12 +60,12 @@ namespace greirat
 
         private void CollectRemindersFromDB ()
         {
-            Stack<FoodRemindData> remindersCollection = Program.DBManager.GetAllRemindersFromDB();
-            ActiveReminders = new List<OrdersReminder>(remindersCollection.Count);
+            Stack<VoteRemindData> remindersCollection = Program.DBManager.GetAllRemindersFromDB();
+            ActiveReminders = new List<VoteReminder>(remindersCollection.Count);
 
             while (remindersCollection.Count > 0)
             {
-                ActiveReminders.Add(new OrdersReminder(remindersCollection.Pop()));
+                ActiveReminders.Add(new VoteReminder(remindersCollection.Pop()));
             }
         }
 
@@ -77,11 +77,11 @@ namespace greirat
             }
         }
 
-        private OrdersReminder FindReminder (ulong guildID, ulong channelID)
+        private VoteReminder FindReminder (ulong guildID, ulong channelID)
         {
             for (int reminderPointer = 0; reminderPointer < ActiveReminders.Count; reminderPointer++)
             {
-                OrdersReminder currentReminder = ActiveReminders[reminderPointer];
+                VoteReminder currentReminder = ActiveReminders[reminderPointer];
 
                 if ((currentReminder.ReminderData.GuildID == guildID) && (currentReminder.ReminderData.ChannelID == channelID))
                 {

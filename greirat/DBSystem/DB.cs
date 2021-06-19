@@ -14,7 +14,7 @@ namespace greirat
         private const string TODAY_DATA_STRING_TEMPLATE = "{0}-{1}-{2}";
 
         private DbSet<OrderData> Orders { get; set; }
-        private DbSet<FoodRemindData> RemindersData { get; set; }
+        private DbSet<VoteRemindData> RemindersData { get; set; }
 
         protected override void OnConfiguring (DbContextOptionsBuilder options)
         {
@@ -72,19 +72,19 @@ namespace greirat
             return true;
         }
 
-        public FoodRemindData AddNewReminder (SocketCommandContext messageData, string timeToRemind, string messageToRemind)
+        public VoteRemindData AddNewReminder (SocketCommandContext messageData, string timeToRemind, string messageToRemind)
         {
-            EntityEntry<FoodRemindData> createdReminder = Add(new FoodRemindData(messageData.Guild.Id, messageData.Message.Channel.Id, timeToRemind, messageToRemind));
+            EntityEntry<VoteRemindData> createdReminder = Add(new VoteRemindData(messageData.Guild.Id, messageData.Message.Channel.Id, timeToRemind, messageToRemind));
             SaveChanges();
             return createdReminder.Entity;
         }
 
-        public Stack<FoodRemindData> GetAllRemindersFromDB ()
+        public Stack<VoteRemindData> GetAllRemindersFromDB ()
         {
             return new(RemindersData);
         }
 
-        public void DeleteReminder (FoodRemindData reminderDataToDelete)
+        public void DeleteReminder (VoteRemindData reminderDataToDelete)
         {
             Remove(reminderDataToDelete);
             SaveChanges();

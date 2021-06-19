@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 
 namespace greirat
 {
-    public class OrdersReminder
+    public class VoteReminder
     {
-        public FoodRemindData ReminderData { get; private set; }
+        public VoteRemindData ReminderData { get; private set; }
         
         private TimeSpan RemindTime { get; set; }
 
-        public OrdersReminder (FoodRemindData reminderData)
+        public VoteReminder (VoteRemindData reminderData)
         {
             ReminderData = reminderData;
         }
@@ -18,7 +18,7 @@ namespace greirat
         {
             if (CheckIfCanStartReminderThread() == true)
             {
-                RemindAboutFood();
+                RemindAboutVote();
             }
         }
 
@@ -28,7 +28,7 @@ namespace greirat
             return (string.IsNullOrEmpty(timeForRemind) == false) && (TimeSpan.TryParse(timeForRemind, out _) == true);
         }
 
-        private async Task RemindAboutFood ()
+        private async Task RemindAboutVote ()
         {
             RemindTime = TimeSpan.Parse(ReminderData.TimeToRemind);
             

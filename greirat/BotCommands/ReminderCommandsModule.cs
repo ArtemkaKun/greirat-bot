@@ -10,6 +10,7 @@ namespace greirat
         private const string CANNOT_SET_REMINDER_MESSAGE = "Cannot set reminder for this channel";
         private const string NO_REMINDER_IN_CHANNEL_MESSAGE = "No reminders in channet yet";
         private const string REMINDER_WAS_REMOVED_MESSAGE = "Reminder was successfully removed";
+        private const string REMINDER_WAS_UPDATED_MESSAGE = "Reminder was successfully updated";
         
         [Command("-set")]
         [Summary("Sets reminder about of food vote")]
@@ -36,6 +37,15 @@ namespace greirat
             bool isOperationSucceed = Program.RemindersOrchestrator.TryDeleteChannelReminder(Context.Guild.Id, Context.Message.Channel.Id);
 
             return ReplyAsync(isOperationSucceed == true ? REMINDER_WAS_REMOVED_MESSAGE : NO_REMINDER_IN_CHANNEL_MESSAGE);
+        }
+        
+        [Command("-upd")]
+        [Summary("Update reminder for this channel with a new data")]
+        public Task UpdateChannelReminder (string timeOfDayWhereRemind, [Remainder] string messageToRemind)
+        {
+            bool isOperationSucceed = Program.RemindersOrchestrator.TryUpdateChannelReminder(Context, timeOfDayWhereRemind, messageToRemind);
+
+            return ReplyAsync(isOperationSucceed == true ? REMINDER_WAS_UPDATED_MESSAGE : NO_REMINDER_IN_CHANNEL_MESSAGE);
         }
     }
 }

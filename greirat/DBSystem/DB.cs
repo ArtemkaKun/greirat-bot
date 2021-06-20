@@ -89,6 +89,20 @@ namespace greirat
             Remove(reminderDataToDelete);
             SaveChanges();
         }
+
+        public void UpdateReminder (VoteRemindData reminderToUpdate)
+        {
+            VoteRemindData reminder = RemindersData.SingleOrDefault(reminderData => reminderData.ReminderID == reminderToUpdate.ReminderID);
+
+            if (reminder == null)
+            {
+                return;
+            }
+
+            reminder.TimeToRemind = reminderToUpdate.TimeToRemind;
+            reminder.RemindMessage = reminderToUpdate.RemindMessage;
+            SaveChanges();
+        }
         
         private Queue<OrderData> StoreOrdersDataInQueue (IEnumerator<OrderData> records)
         {

@@ -58,6 +58,23 @@ namespace greirat
             return true;
         }
 
+        public bool TryUpdateChannelReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind)
+        {
+            VoteReminder reminderForThisChannel = FindReminder(context.Guild.Id, context.Message.Channel.Id);
+            
+            if (reminderForThisChannel == null)
+            {
+                return false;
+            }
+
+            reminderForThisChannel.ReminderData.TimeToRemind = timeOfDayWhereRemind;
+            reminderForThisChannel.ReminderData.RemindMessage = messageToRemind;
+            Program.DBManager.UpdateReminder(reminderForThisChannel.ReminderData);
+            reminderForThisChannel.TryStartReminderThread();
+
+            return true;
+        }
+
         private void CollectRemindersFromDB ()
         {
             Stack<VoteRemindData> remindersCollection = Program.DBManager.GetAllRemindersFromDB();

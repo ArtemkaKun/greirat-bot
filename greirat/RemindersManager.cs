@@ -10,7 +10,7 @@ namespace greirat
         private const string REMINDERS_WERE_ACTIVATED_MESSAGE = "All reminders from DB were activated";
         private const string REMINDER_INFO_MESSAGE = "```Every day (except weekends) at {0} send message '{1}' to the chat```";
 
-        private static List<VoteReminder> ActiveReminders { get; set; }
+        private static List<VoteReminder> ActiveReminders { get; set; } = new();
 
         public async Task StartRemindersFromDB ()
         {
@@ -38,7 +38,7 @@ namespace greirat
 
         public string GetReminderInfo (ulong guildID, ulong channelID)
         {
-            VoteRemindData channelReminderInfo = FindReminder(guildID, channelID).ReminderData;
+            VoteRemindData channelReminderInfo = FindReminder(guildID, channelID)?.ReminderData;
 
             return channelReminderInfo == null ? null : string.Format(REMINDER_INFO_MESSAGE, channelReminderInfo.TimeToRemind, channelReminderInfo.RemindMessage);
         }

@@ -21,15 +21,20 @@ namespace greirat
             await Task.Yield();
         }
 
-        public bool TryStartNewReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind)
+        public bool TryStartNewReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind, int voteDurationInMinutes)
         {
             if (FindReminder(context.Guild.Id, context.Message.Channel.Id) != null)
             {
                 return false;
             }
 
-            VoteRemindData newReminderID = Program.DBManager.AddNewReminder(context, timeOfDayWhereRemind, messageToRemind);
-            VoteReminder newReminder = new(newReminderID);
+            if (voteDurationInMinutes == 0)
+            {
+                voteDurationInMinutes = 60;
+            }
+
+            VoteRemindData newReminderData = Program.DBManager.AddNewReminder(context, timeOfDayWhereRemind, messageToRemind, voteDurationInMinutes);
+            VoteReminder newReminder = new(newReminderData);
             ActiveReminders.Add(newReminder);
             newReminder.TryStartReminderThread();
 

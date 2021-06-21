@@ -72,9 +72,9 @@ namespace greirat
             return true;
         }
 
-        public VoteRemindData AddNewReminder (SocketCommandContext messageData, string timeToRemind, string messageToRemind)
+        public VoteRemindData AddNewReminder (SocketCommandContext messageData, string timeToRemind, string messageToRemind, int voteDurationInMinutes)
         {
-            EntityEntry<VoteRemindData> createdReminder = Add(new VoteRemindData(messageData.Guild.Id, messageData.Message.Channel.Id, timeToRemind, messageToRemind));
+            EntityEntry<VoteRemindData> createdReminder = Add(new VoteRemindData(messageData.Guild.Id, messageData.Message.Channel.Id, timeToRemind, messageToRemind, voteDurationInMinutes));
             SaveChanges();
             return createdReminder.Entity;
         }

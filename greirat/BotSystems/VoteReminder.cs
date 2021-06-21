@@ -56,6 +56,7 @@ namespace greirat
         private async void RemindAboutVote ()
         {
             RemindTime = TimeSpan.Parse(ReminderData.TimeToRemind);
+            TimeSpan voteDuration = new(0, ReminderData.VoteDurationInMinutes, 0);
 
             while (true)
             {
@@ -71,15 +72,26 @@ namespace greirat
                 }
 
                 await Program.Bot.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, ReminderData.RemindMessage);
+
+                try
+                {
+                    await Task.Delay(voteDuration, ReminderCancellationToken);
+                }
+                catch (Exception)
+                {
+                    return;
+                }
+                
+                await Program.Bot.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, "Voting finished. Make an order asap");
             }
         }
 
         private TimeSpan CalculateTimeToRemind ()
         {
-            // if (CheckIfTodayIsWeekend() == true)
-            // {
-            //     return new TimeSpan(24, 0, 0);
-            // }
+            if (CheckIfTodayIsWeekend() == true)
+            {
+                return new TimeSpan(24, 0, 0);
+            }
 
             TimeSpan currentTime = DateTime.Now.TimeOfDay;
             TimeSpan timeToWait = currentTime < RemindTime ? RemindTime.Subtract(currentTime) : DateTime.Today.Subtract(currentTime).TimeOfDay + RemindTime;

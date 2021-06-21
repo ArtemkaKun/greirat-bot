@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Discord.Commands;
 
 namespace greirat
@@ -14,9 +15,9 @@ namespace greirat
         
         [Command("-set")]
         [Summary("Sets reminder about of food vote")]
-        public Task SetEverydayReminder (string timeOfDayWhereRemind, [Remainder] string messageToRemind)
+        public Task SetEverydayReminder (string timeOfDayWhereRemind, [Optional] int durationOfVoteInMinutes, [Remainder] string messageToRemind)
         {
-            bool isOperationSucceed = Program.RemindersOrchestrator.TryStartNewReminder(Context, timeOfDayWhereRemind, messageToRemind);
+            bool isOperationSucceed = Program.RemindersOrchestrator.TryStartNewReminder(Context, timeOfDayWhereRemind, messageToRemind, durationOfVoteInMinutes);
 
             return ReplyAsync(isOperationSucceed == true ? string.Format(REMINDER_WAS_SET_MESSAGE, timeOfDayWhereRemind) : CANNOT_SET_REMINDER_MESSAGE);
         }

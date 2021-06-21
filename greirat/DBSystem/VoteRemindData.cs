@@ -13,13 +13,15 @@ namespace greirat
         public ulong ChannelID { get; private set; }
         public string TimeToRemind { get; set; }
         public string RemindMessage { get; set; }
+        public int VoteDurationInMinutes { get; set; }
 
-        public VoteRemindData (ulong guildID, ulong channelID, string timeToRemind, string remindMessage)
+        public VoteRemindData (ulong guildID, ulong channelID, string timeToRemind, string remindMessage, int voteDurationInMinutes)
         {
             GuildID = guildID;
             ChannelID = channelID;
             TimeToRemind = timeToRemind;
             RemindMessage = remindMessage;
+            VoteDurationInMinutes = voteDurationInMinutes;
         }
     }
 }

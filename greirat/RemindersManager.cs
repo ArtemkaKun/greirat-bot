@@ -57,6 +57,7 @@ namespace greirat
                 return false;
             }
 
+            channelReminderInfo.CancelActualReminderThread();
             ActiveReminders.Remove(channelReminderInfo);
             Program.DBManager.DeleteReminder(channelReminderInfo.ReminderData);
 

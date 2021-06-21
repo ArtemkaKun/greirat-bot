@@ -23,7 +23,7 @@ namespace greirat
         {
             if (ReminderTimerTask != null)
             {
-                CancelOldReminderThread();
+                CancelActualReminderThread();
                 SetUpCancellationMembers();
             }
 
@@ -34,7 +34,7 @@ namespace greirat
             }
         }
 
-        private void CancelOldReminderThread ()
+        public void CancelActualReminderThread ()
         {
             ReminderCancellationProvider.Cancel();
             ReminderTimerTask.Dispose();

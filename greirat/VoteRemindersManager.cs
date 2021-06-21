@@ -5,7 +5,7 @@ using Discord.Commands;
 
 namespace greirat
 {
-    public class RemindersManager
+    public class VoteRemindersManager
     {
         private const string REMINDERS_WERE_ACTIVATED_MESSAGE = "All reminders from DB were activated";
         private const string REMINDER_INFO_MESSAGE = "```Every day (except weekends) at {0} send message '{1}' to the chat```";
@@ -21,7 +21,7 @@ namespace greirat
             await Task.Yield();
         }
 
-        public bool TryStartNewReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind, int voteDurationInMinutes)
+        public bool TryStartNewVoteReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind, int voteDurationInMinutes)
         {
             if (FindReminder(context.Guild.Id, context.Message.Channel.Id) != null)
             {
@@ -41,14 +41,14 @@ namespace greirat
             return true;
         }
 
-        public string GetReminderInfo (ulong guildID, ulong channelID)
+        public string GetVoteReminderInfo (ulong guildID, ulong channelID)
         {
             VoteRemindData channelReminderInfo = FindReminder(guildID, channelID)?.ReminderData;
 
             return channelReminderInfo == null ? null : string.Format(REMINDER_INFO_MESSAGE, channelReminderInfo.TimeToRemind, channelReminderInfo.RemindMessage);
         }
 
-        public bool TryDeleteChannelReminder (ulong guildID, ulong channelID)
+        public bool TryDeleteChannelVoteReminder (ulong guildID, ulong channelID)
         {
             VoteReminder channelReminderInfo = FindReminder(guildID, channelID);
 
@@ -64,7 +64,7 @@ namespace greirat
             return true;
         }
 
-        public bool TryUpdateChannelReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind)
+        public bool TryUpdateChannelVoteReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind)
         {
             VoteReminder reminderForThisChannel = FindReminder(context.Guild.Id, context.Message.Channel.Id);
             

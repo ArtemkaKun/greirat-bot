@@ -6,7 +6,7 @@ namespace greirat
     {
         public static DiscordBot Bot { get; private set; } = new();
         public static DB DBManager { get; private set; } = new();
-        public static RemindersManager RemindersOrchestrator { get; private set; } = new();
+        public static VoteRemindersManager VoteVoteRemindersOrchestrator { get; private set; } = new();
         
         private static void Main ()
         {
@@ -17,7 +17,7 @@ namespace greirat
         {
             await Bot.Initialize();
             DBManager.EnsureThatDBIsCreated();
-            await RemindersOrchestrator.StartRemindersFromDB();
+            await VoteVoteRemindersOrchestrator.StartRemindersFromDB();
             await Task.Delay(-1);
         }
     }

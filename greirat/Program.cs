@@ -2,12 +2,12 @@
 
 namespace greirat
 {
-    internal class Program
+    internal static class Program
     {
         public static DiscordBot Bot { get; private set; } = new();
         public static DB DBManager { get; private set; } = new();
         public static VoteRemindersManager VoteVoteRemindersOrchestrator { get; private set; } = new();
-        
+
         private static void Main ()
         {
             MainAsync().GetAwaiter().GetResult();
@@ -21,4 +21,4 @@ namespace greirat
             await Task.Delay(-1);
         }
     }
-}   
+}

@@ -23,6 +23,7 @@ namespace greirat
         private static async Task MainAsync ()
         {
             await BotClient.Initialize();
+            await BotClient.StartBot();
             await Task.Delay(-1);
         }
     }

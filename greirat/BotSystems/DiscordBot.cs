@@ -19,14 +19,19 @@ namespace greirat
         {
             SubscribeOnClientEvents();
             await GetCommandsModule();
-            await StartBot();
+        }
+
+        public async Task StartBot ()
+        {
+            await Client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable(ENVIRONMENT_VARIABLE_WITH_BOT_TOKEN));
+            await Client.StartAsync();
         }
 
         public async Task SendMessage (ulong guildID, ulong channelID, string messageText)
         {
             await Client.GetGuild(guildID).GetTextChannel(channelID).SendMessageAsync(messageText);
         }
-        
+
         private void SubscribeOnClientEvents ()
         {
             Client.Log += Log;
@@ -76,12 +81,6 @@ namespace greirat
         private async Task GetCommandsModule ()
         {
             await Commands.AddModulesAsync(Assembly.GetEntryAssembly(), null);
-        }
-
-        private async Task StartBot ()
-        {
-            await Client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable(ENVIRONMENT_VARIABLE_WITH_BOT_TOKEN));
-            await Client.StartAsync();
         }
     }
 }

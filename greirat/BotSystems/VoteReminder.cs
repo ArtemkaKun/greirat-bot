@@ -71,7 +71,7 @@ namespace greirat
                     return;
                 }
 
-                await Program.Bot.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, ReminderData.RemindMessage);
+                await Program.BotClient.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, ReminderData.RemindMessage);
 
                 try
                 {
@@ -82,7 +82,7 @@ namespace greirat
                     return;
                 }
                 
-                await Program.Bot.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, "Voting finished. Make an order asap");
+                await Program.BotClient.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, "Voting finished. Make an order asap");
             }
         }
 

@@ -4,8 +4,8 @@ namespace greirat
 {
     internal static class Program
     {
-        public static DiscordBot Bot { get; private set; } = new();
-        public static DB DBManager { get; private set; } = new();
+        public static DiscordBot BotClient { get; } = new();
+        public static DB DBManager { get; } = new();
         public static VoteRemindersManager VoteVoteRemindersOrchestrator { get; private set; } = new();
 
         private static void Main ()
@@ -15,7 +15,7 @@ namespace greirat
 
         private static async Task MainAsync ()
         {
-            await Bot.Initialize();
+            await BotClient.Initialize();
             DBManager.EnsureThatDBIsCreated();
             await VoteVoteRemindersOrchestrator.StartRemindersFromDB();
             await Task.Delay(-1);

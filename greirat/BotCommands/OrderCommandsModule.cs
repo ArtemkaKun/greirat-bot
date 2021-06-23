@@ -23,7 +23,7 @@ namespace greirat
         }
 
         [Command("-upd")]
-        [Summary("Updates order with provided text.")]
+        [Summary("Updates order with provided text")]
         public Task UpdateUserOrder (int idOfOrder, [Remainder] string newOrderText)
         {
             bool updateOperationResult = Program.DBManager.TryUpdateOrderData(Context.Message.Author.Username, idOfOrder, newOrderText);
@@ -32,7 +32,7 @@ namespace greirat
         }
 
         [Command("-del")]
-        [Summary("Deletes order.")]
+        [Summary("Deletes order")]
         public Task DeleteOrder (int idOfOrder)
         {
             bool deleteOperationResult = Program.DBManager.TryDeleteOrderData(Context.Message.Author.Username, idOfOrder);

@@ -15,14 +15,14 @@ namespace greirat
         }
         
         [Command(SORT_SHOW_COMMAND_NAME)]
-        [Summary("Shows your today's orders (sorted a -> z)")]
+        [Summary("Shows your today's orders (sorted)")]
         public Task ShowUserTodayOrdersSorted ()
         {
             return ShowOrdersData(SORT_SHOW_COMMAND_NAME, GetAllUserTodayOrders());
         }
         
         [Command(SUM_SHOW_COMMAND_NAME)]
-        [Summary("Shows your today's orders (summary mode)")]
+        [Summary("Shows your today's orders (summary)")]
         public Task ShowUserTodayOrdersSummary ()
         {
             return ShowOrdersData(SUM_SHOW_COMMAND_NAME, GetAllUserTodayOrders());

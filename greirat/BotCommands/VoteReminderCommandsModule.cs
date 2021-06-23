@@ -14,16 +14,16 @@ namespace greirat
         private const string REMINDER_WAS_UPDATED_MESSAGE = "Reminder was successfully updated";
         
         [Command("-set")]
-        [Summary("Sets reminder about of food vote")]
-        public Task SetEverydayVoteReminder (string timeOfDayWhereRemind, [Optional] int durationOfVoteInMinutes, [Remainder] string messageToRemind)
+        [Summary("Sets food vote reminder")]
+        public Task SetEverydayVoteReminder (string remindTime, [Optional] int voteDurationInMinutes, [Remainder] string remindMessage)
         {
-            bool isOperationSucceed = Program.VoteRemindersController.TryStartNewVoteReminder(Context, timeOfDayWhereRemind, messageToRemind, durationOfVoteInMinutes);
+            bool isOperationSucceed = Program.VoteRemindersController.TryStartNewVoteReminder(Context, remindTime, remindMessage, voteDurationInMinutes);
 
-            return ReplyAsync(isOperationSucceed == true ? string.Format(REMINDER_WAS_SET_MESSAGE, timeOfDayWhereRemind) : CANNOT_SET_REMINDER_MESSAGE);
+            return ReplyAsync(isOperationSucceed == true ? string.Format(REMINDER_WAS_SET_MESSAGE, remindTime) : CANNOT_SET_REMINDER_MESSAGE);
         }
         
         [Command("-show")]
-        [Summary("Show reminder data for this channel")]
+        [Summary("Show channel's reminder data")]
         public Task ShowChannelVoteReminderData ()
         {
             string infoAboutReminder = Program.VoteRemindersController.GetVoteReminderInfo(Context.Guild.Id, Context.Message.Channel.Id);
@@ -32,7 +32,7 @@ namespace greirat
         }
         
         [Command("-del")]
-        [Summary("Delete reminder for this channel")]
+        [Summary("Delete channel's reminder")]
         public Task DeleteChannelVoteReminder ()
         {
             bool isOperationSucceed = Program.VoteRemindersController.TryDeleteChannelVoteReminder(Context.Guild.Id, Context.Message.Channel.Id);
@@ -41,10 +41,10 @@ namespace greirat
         }
         
         [Command("-upd")]
-        [Summary("Update reminder for this channel with a new data")]
-        public Task UpdateChannelVoteReminder (string timeOfDayWhereRemind, [Remainder] string messageToRemind)
+        [Summary("Update channel's reminder")]
+        public Task UpdateChannelVoteReminder (string remindTime, [Remainder] string remindMessage)
         {
-            bool isOperationSucceed = Program.VoteRemindersController.TryUpdateChannelVoteReminder(Context, timeOfDayWhereRemind, messageToRemind);
+            bool isOperationSucceed = Program.VoteRemindersController.TryUpdateChannelVoteReminder(Context, remindTime, remindMessage);
 
             return ReplyAsync(isOperationSucceed == true ? REMINDER_WAS_UPDATED_MESSAGE : NO_REMINDER_IN_CHANNEL_MESSAGE);
         }

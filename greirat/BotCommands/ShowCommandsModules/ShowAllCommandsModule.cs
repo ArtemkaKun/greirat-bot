@@ -8,21 +8,21 @@ namespace greirat
     public class ShowAllCommandsModule : BaseShowCommandsModule
     {
         [Command(COMMON_SHOW_COMMAND_NAME)]
-        [Summary("Shows all orders that was made today")]
+        [Summary("Shows all today's orders")]
         public Task ShowTodayOrders ()
         {
             return ShowOrdersData(COMMON_SHOW_COMMAND_NAME, GetAllTodayOrders());
         }
         
         [Command(SORT_SHOW_COMMAND_NAME)]
-        [Summary("Shows all orders that was made today (sorted a -> z)")]
+        [Summary("Shows all today's (sorted)")]
         public Task ShowTodayOrdersSorted ()
         {
             return ShowOrdersData(SORT_SHOW_COMMAND_NAME, GetAllTodayOrders());
         }
         
         [Command(SUM_SHOW_COMMAND_NAME)]
-        [Summary("Shows all orders that was made today (summary mode)")]
+        [Summary("Shows all today's (summary)")]
         public Task ShowTodayOrdersSummary ()
         {
             return ShowOrdersData(SUM_SHOW_COMMAND_NAME, GetAllTodayOrders());

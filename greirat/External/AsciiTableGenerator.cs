@@ -13,8 +13,8 @@ namespace greirat.External
             var lenghtByColumnDictionary = GetTotalSpaceForEachColumn(table);
 
             var tableBuilder = new StringBuilder();
+            AppendColumns(table, tableBuilder, lenghtByColumnDictionary);
             AppendRows(table, lenghtByColumnDictionary, tableBuilder);
-            //AppendColumns(table, tableBuilder, lenghtByColumnDictionary);
             return tableBuilder;
         }
 
@@ -26,7 +26,8 @@ namespace greirat.External
 
                 for (var j = 0; j < table.Columns.Count; j++)
                 {
-                    rowBuilder.Append(PadWithSpaceAndSeperator(table.Rows[i][j].ToString().Trim(), lenghtByColumnDictionary[j], j == 0));
+                    rowBuilder.Append(PadWithSpaceAndSeperator(table.Rows[i][j].ToString().Trim(),
+                        lenghtByColumnDictionary[j]));
                 }
 
                 tableBuilder.AppendLine(rowBuilder.ToString());
@@ -86,27 +87,14 @@ namespace greirat.External
             return dictionary;
         }
 
-        private static string PadWithSpaceAndSeperator (string value, int totalColumnLength, bool wallOnEnd = true)
+        private static string PadWithSpaceAndSeperator (string value, int totalColumnLength)
         {
             var remaningSpace = value.Length < totalColumnLength
                 ? totalColumnLength - value.Length
                 : value.Length - totalColumnLength;
 
-            int spaceInTabs = 0;
-            int spaceInSpaces = remaningSpace;
-
-            for (int i = remaningSpace; i >= 0; i--)
-            {
-                if ((i % 4) == 0)
-                {
-                    spaceInTabs = i / 4;
-                    spaceInSpaces = remaningSpace - i;
-                    break;
-                }
-            }
-
-            var spaces = string.Join("", Enumerable.Repeat("\t", spaceInTabs).ToArray()) + string.Join("", Enumerable.Repeat(" ", spaceInSpaces).ToArray());
-            return value + spaces + (wallOnEnd == true ? " | " : "");
+            var spaces = string.Join("", Enumerable.Repeat(" ", remaningSpace).ToArray());
+            return value + spaces + " | ";
         }
     }
 }

@@ -34,35 +34,35 @@ namespace greirat
 
         private void SubscribeOnClientEvents ()
         {
-            Client.Log += Log;
+            Client.Log += ProceedLogMessage;
             Client.MessageReceived += ProceedReceivedMessage;
         }
 
-        private Task Log (LogMessage msg)
+        private Task ProceedLogMessage (LogMessage msg)
         {
             Console.WriteLine(msg.ToString());
 
             return Task.CompletedTask;
         }
 
-        private async Task ProceedReceivedMessage (SocketMessage messageParam)
+        private async Task ProceedReceivedMessage (SocketMessage message)
         {
-            if (messageParam is not SocketUserMessage message)
+            if (message is not SocketUserMessage userMessage)
             {
                 return;
             }
 
-            if (CheckIfMessageFromBot(message) == true)
+            if (CheckIfMessageFromBot(userMessage) == true)
             {
                 return;
             }
 
-            if (CheckIfTheMessageContainsCommand(message, out int commandPrefixPosition) == false)
+            if (CheckIfTheMessageContainsCommand(userMessage, out int commandPrefixPosition) == false)
             {
                 return;
             }
 
-            SocketCommandContext context = new(Client, message);
+            SocketCommandContext context = new(Client, userMessage);
             await Commands.ExecuteAsync(context, commandPrefixPosition, null);
         }
 

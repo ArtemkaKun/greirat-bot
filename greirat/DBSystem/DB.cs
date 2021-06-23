@@ -21,7 +21,7 @@ namespace greirat
             options.UseSqlite(PATH_TO_DATA_DB_FILE);
         }
 
-        public void EnsureThatDBIsCreated ()
+        public void EnsureDBIsCreated ()
         {
             Database.EnsureCreated();
         }

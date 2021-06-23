@@ -16,7 +16,7 @@ namespace greirat
 
         private static void InitializeMembersSync ()
         {
-            DBManager.EnsureThatDBIsCreated();
+            DBManager.EnsureDBIsCreated();
         }
         
         private static async Task MainAsync ()

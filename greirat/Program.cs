@@ -9,6 +9,7 @@ namespace greirat
         public static DB DBManager { get; } = new();
         public static VoteRemindersManager VoteRemindersController { get; } = new();
         public static HelpInfoAsciiTableConverter HelpOutputMaintainer { get; } = new();
+        public static OrderDataAsciiTableConverter OrdersOutputMaintainer { get; } = new();
 
         private static void Main ()
         {

@@ -17,7 +17,7 @@ namespace greirat
         [Summary("Sets reminder about of food vote")]
         public Task SetEverydayVoteReminder (string timeOfDayWhereRemind, [Optional] int durationOfVoteInMinutes, [Remainder] string messageToRemind)
         {
-            bool isOperationSucceed = Program.VoteVoteRemindersOrchestrator.TryStartNewVoteReminder(Context, timeOfDayWhereRemind, messageToRemind, durationOfVoteInMinutes);
+            bool isOperationSucceed = Program.VoteRemindersController.TryStartNewVoteReminder(Context, timeOfDayWhereRemind, messageToRemind, durationOfVoteInMinutes);
 
             return ReplyAsync(isOperationSucceed == true ? string.Format(REMINDER_WAS_SET_MESSAGE, timeOfDayWhereRemind) : CANNOT_SET_REMINDER_MESSAGE);
         }
@@ -26,7 +26,7 @@ namespace greirat
         [Summary("Show reminder data for this channel")]
         public Task ShowChannelVoteReminderData ()
         {
-            string infoAboutReminder = Program.VoteVoteRemindersOrchestrator.GetVoteReminderInfo(Context.Guild.Id, Context.Message.Channel.Id);
+            string infoAboutReminder = Program.VoteRemindersController.GetVoteReminderInfo(Context.Guild.Id, Context.Message.Channel.Id);
 
             return ReplyAsync(string.IsNullOrEmpty(infoAboutReminder) == true ? NO_REMINDER_IN_CHANNEL_MESSAGE : infoAboutReminder);
         }
@@ -35,7 +35,7 @@ namespace greirat
         [Summary("Delete reminder for this channel")]
         public Task DeleteChannelVoteReminder ()
         {
-            bool isOperationSucceed = Program.VoteVoteRemindersOrchestrator.TryDeleteChannelVoteReminder(Context.Guild.Id, Context.Message.Channel.Id);
+            bool isOperationSucceed = Program.VoteRemindersController.TryDeleteChannelVoteReminder(Context.Guild.Id, Context.Message.Channel.Id);
 
             return ReplyAsync(isOperationSucceed == true ? REMINDER_WAS_REMOVED_MESSAGE : NO_REMINDER_IN_CHANNEL_MESSAGE);
         }
@@ -44,7 +44,7 @@ namespace greirat
         [Summary("Update reminder for this channel with a new data")]
         public Task UpdateChannelVoteReminder (string timeOfDayWhereRemind, [Remainder] string messageToRemind)
         {
-            bool isOperationSucceed = Program.VoteVoteRemindersOrchestrator.TryUpdateChannelVoteReminder(Context, timeOfDayWhereRemind, messageToRemind);
+            bool isOperationSucceed = Program.VoteRemindersController.TryUpdateChannelVoteReminder(Context, timeOfDayWhereRemind, messageToRemind);
 
             return ReplyAsync(isOperationSucceed == true ? REMINDER_WAS_UPDATED_MESSAGE : NO_REMINDER_IN_CHANNEL_MESSAGE);
         }

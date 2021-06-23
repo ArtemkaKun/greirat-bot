@@ -12,13 +12,11 @@ namespace greirat
 
         private static List<VoteReminder> ActiveReminders { get; set; } = new();
 
-        public async Task StartRemindersFromDB ()
+        public void StartRemindersFromDB ()
         {
             CollectRemindersFromDB();
             StartAllReminders();
             Console.WriteLine(REMINDERS_WERE_ACTIVATED_MESSAGE);
-
-            await Task.Yield();
         }
 
         public bool TryStartNewVoteReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind, int voteDurationInMinutes)

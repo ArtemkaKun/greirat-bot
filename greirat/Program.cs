@@ -10,19 +10,19 @@ namespace greirat
 
         private static void Main ()
         {
-            InitializeMembersSync();
+            ProceedSyncStart();
             MainAsync().GetAwaiter().GetResult();
         }
 
-        private static void InitializeMembersSync ()
+        private static void ProceedSyncStart ()
         {
             DBManager.EnsureDBIsCreated();
+            VoteRemindersController.StartRemindersFromDB();
         }
         
         private static async Task MainAsync ()
         {
             await BotClient.Initialize();
-            await VoteRemindersController.StartRemindersFromDB();
             await Task.Delay(-1);
         }
     }

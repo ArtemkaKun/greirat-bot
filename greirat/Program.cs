@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using greirat.Helpers;
 
 namespace greirat
 {
@@ -7,6 +8,7 @@ namespace greirat
         public static DiscordBot BotClient { get; } = new();
         public static DB DBManager { get; } = new();
         public static VoteRemindersManager VoteRemindersController { get; } = new();
+        public static HelpInfoAsciiTableConverter HelpOutputMaintainer { get; } = new();
 
         private static void Main ()
         {
@@ -20,7 +22,7 @@ namespace greirat
             DBManager.EnsureDBIsCreated();
             VoteRemindersController.StartRemindersFromDB();
         }
-        
+
         private static async Task ProceedAsyncPreparations ()
         {
             await BotClient.Initialize();

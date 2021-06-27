@@ -71,6 +71,11 @@ namespace greirat
                     return;
                 }
 
+                if (CheckIfTodayIsWeekend() == true)
+                {
+                    continue;
+                }
+                
                 await Program.BotClient.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, ReminderData.RemindMessage);
 
                 try
@@ -88,11 +93,6 @@ namespace greirat
 
         private TimeSpan CalculateTimeToRemind ()
         {
-            if (CheckIfTodayIsWeekend() == true)
-            {
-                return new TimeSpan(24, 0, 0);
-            }
-
             TimeSpan currentTime = DateTime.Now.TimeOfDay;
             TimeSpan timeToWait = currentTime < RemindTime ? RemindTime.Subtract(currentTime) : DateTime.Today.Subtract(currentTime).TimeOfDay + RemindTime;
 

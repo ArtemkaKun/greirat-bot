@@ -82,7 +82,7 @@ namespace greirat
                     return;
                 }
                 
-                await Program.BotClient.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, "Voting finished. Make an order asap");
+                await Program.BotClient.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, "@+Food Voting finished. Make an order asap");
             }
         }
 

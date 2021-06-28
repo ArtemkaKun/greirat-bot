@@ -22,7 +22,7 @@ namespace greirat
             return ReplyAsync(ORDER_WAS_SAVED_MESSAGE);
         }
 
-        [Command("-upd")]
+        [Command(CommandsDatabase.UPDATE_COMMAND_NAME)]
         [Summary("Updates order with provided text")]
         public Task UpdateUserOrder (int idOfOrder, [Remainder] string newOrderText)
         {
@@ -31,7 +31,7 @@ namespace greirat
             return ReplyAsync(updateOperationResult == true ? ORDER_WAS_UPDATED_MESSAGE : ORDER_UPDATE_FAILED);
         }
 
-        [Command("-del")]
+        [Command(CommandsDatabase.DELETE_COMMAND_NAME)]
         [Summary("Deletes order")]
         public Task DeleteOrder (int idOfOrder)
         {

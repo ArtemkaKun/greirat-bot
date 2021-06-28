@@ -4,16 +4,17 @@ using Discord.Commands;
 
 namespace greirat
 {
-    [Group("voteReminder")]
+    [Group(VOTE_REMINDER_COMMANDS_GROUP_NAME)]
     public class VoteReminderCommands : ModuleBase<SocketCommandContext>
     {
+        private const string VOTE_REMINDER_COMMANDS_GROUP_NAME = "voteReminder";
         private const string REMINDER_WAS_SET_MESSAGE = "Reminder was set on {0} everyday (except weekends)";
         private const string CANNOT_SET_REMINDER_MESSAGE = "Cannot set reminder for this channel";
         private const string NO_REMINDER_IN_CHANNEL_MESSAGE = "No reminders in channet yet";
         private const string REMINDER_WAS_REMOVED_MESSAGE = "Reminder was successfully removed";
         private const string REMINDER_WAS_UPDATED_MESSAGE = "Reminder was successfully updated";
-        
-        [Command("-set")]
+
+        [Command(CommandsDatabase.SET_COMMAND_NAME)]
         [Summary("Sets food vote reminder")]
         public Task SetEverydayVoteReminder (string remindTime, [Optional] int voteDurationInMinutes, [Remainder] string remindMessage)
         {
@@ -21,8 +22,8 @@ namespace greirat
 
             return ReplyAsync(isOperationSucceed == true ? string.Format(REMINDER_WAS_SET_MESSAGE, remindTime) : CANNOT_SET_REMINDER_MESSAGE);
         }
-        
-        [Command("-show")]
+
+        [Command(CommandsDatabase.SHOW_COMMAND_NAME)]
         [Summary("Show channel's reminder data")]
         public Task ShowChannelVoteReminderData ()
         {
@@ -30,8 +31,8 @@ namespace greirat
 
             return ReplyAsync(string.IsNullOrEmpty(infoAboutReminder) == true ? NO_REMINDER_IN_CHANNEL_MESSAGE : infoAboutReminder);
         }
-        
-        [Command("-del")]
+
+        [Command(CommandsDatabase.DELETE_COMMAND_NAME)]
         [Summary("Delete channel's reminder")]
         public Task DeleteChannelVoteReminder ()
         {
@@ -39,8 +40,8 @@ namespace greirat
 
             return ReplyAsync(isOperationSucceed == true ? REMINDER_WAS_REMOVED_MESSAGE : NO_REMINDER_IN_CHANNEL_MESSAGE);
         }
-        
-        [Command("-upd")]
+
+        [Command(CommandsDatabase.UPDATE_COMMAND_NAME)]
         [Summary("Update channel's reminder")]
         public Task UpdateChannelVoteReminder (string remindTime, [Remainder] string remindMessage)
         {

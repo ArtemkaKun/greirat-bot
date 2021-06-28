@@ -5,7 +5,7 @@ using Discord.Commands;
 namespace greirat
 {
     [Group("voteReminder")]
-    public class VoteReminderCommandsModule : ModuleBase<SocketCommandContext>
+    public class VoteReminderCommands : ModuleBase<SocketCommandContext>
     {
         private const string REMINDER_WAS_SET_MESSAGE = "Reminder was set on {0} everyday (except weekends)";
         private const string CANNOT_SET_REMINDER_MESSAGE = "Cannot set reminder for this channel";

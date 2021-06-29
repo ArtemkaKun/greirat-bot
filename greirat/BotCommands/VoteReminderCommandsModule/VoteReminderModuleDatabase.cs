@@ -4,7 +4,6 @@
     {
         public const string VOTE_REMINDER_COMMANDS_GROUP_NAME = "voteReminder";
         
-        public const string REMINDER_WAS_SET_MESSAGE = "Reminder was set on {0} everyday (except weekends)";
         public const string CANNOT_SET_REMINDER_MESSAGE = "Cannot set reminder for this channel";
         public const string NO_REMINDER_IN_CHANNEL_MESSAGE = "No reminders in channet yet";
         public const string REMINDER_WAS_REMOVED_MESSAGE = "Reminder was successfully removed";

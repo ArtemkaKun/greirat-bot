@@ -19,11 +19,11 @@ namespace greirat
             Console.WriteLine(REMINDERS_WERE_ACTIVATED_MESSAGE);
         }
 
-        public bool TryStartNewVoteReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind, int voteDurationInMinutes)
+        public string TryStartNewVoteReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind, int voteDurationInMinutes)
         {
             if (FindReminder(context.Guild.Id, context.Message.Channel.Id) != null)
             {
-                return false;
+                return "Vote reminder already exists for this channel. Try delete it first or update its info.";
             }
 
             if (voteDurationInMinutes == 0)
@@ -36,7 +36,7 @@ namespace greirat
             ActiveReminders.Add(newReminder);
             newReminder.TryStartReminderThread();
 
-            return true;
+            return string.Format(REMINDER_INFO_MESSAGE, timeOfDayWhereRemind, messageToRemind);
         }
 
         public string GetVoteReminderInfo (ulong guildID, ulong channelID)

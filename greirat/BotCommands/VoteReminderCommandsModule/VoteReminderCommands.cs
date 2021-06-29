@@ -11,9 +11,8 @@ namespace greirat
         [Summary(VoteReminderModuleDatabase.SET_REMINDER_COMMAND_DESCRIPTION)]
         public Task SetEverydayVoteReminder (string remindTime, [Optional] int voteDurationInMinutes, [Remainder] string remindMessage)
         {
-            bool isOperationSucceed = Program.VoteRemindersController.TryStartNewVoteReminder(Context, remindTime, remindMessage, voteDurationInMinutes);
-
-            return ReplyAsync(isOperationSucceed == true ? string.Format(VoteReminderModuleDatabase.REMINDER_WAS_SET_MESSAGE, remindTime) : VoteReminderModuleDatabase.CANNOT_SET_REMINDER_MESSAGE);
+            string resultMessage = Program.VoteRemindersController.TryStartNewVoteReminder(Context, remindTime, remindMessage, voteDurationInMinutes);
+            return ReplyAsync(resultMessage);
         }
 
         [Command(CommandsDatabase.SHOW_COMMAND_NAME)]

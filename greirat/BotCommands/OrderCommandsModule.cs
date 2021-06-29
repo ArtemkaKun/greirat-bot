@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Discord.Commands;
+using greirat;
 
-namespace greirat
+namespace BotCommands
 {
     [Group("order")]
     public class OrderCommandsModule : ModuleBase<SocketCommandContext>

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Discord.Commands;
+using greirat;
 
-namespace greirat
+namespace BotCommands
 {
     [Group(VoteReminderModuleDatabase.VOTE_REMINDER_COMMANDS_GROUP_NAME)]
     public class VoteReminderCommands : ModuleBase<SocketCommandContext>
@@ -40,7 +41,7 @@ namespace greirat
             string resultMessage = actionToPerform?.Invoke(Context);
             return ReplyAsync(resultMessage);
         }
-        
+
         private Task ProceedVoteReminderCommandWithReply (Func<SocketCommandContext, SimpleReminderInfo, string> actionToPerform, SimpleReminderInfo reminderInfo)
         {
             string resultMessage = actionToPerform?.Invoke(Context, reminderInfo);

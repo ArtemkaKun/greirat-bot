@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Discord.Commands;
+using greirat;
 
-namespace greirat
+namespace BotCommands
 {
     public abstract class BaseShowCommandsModule : ModuleBase<SocketCommandContext>
     {

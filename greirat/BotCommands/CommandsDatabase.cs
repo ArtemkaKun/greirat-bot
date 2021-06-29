@@ -1,4 +1,4 @@
-﻿namespace greirat
+﻿namespace BotCommands
 {
     public static class CommandsDatabase
     {

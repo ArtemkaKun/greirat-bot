@@ -9,6 +9,9 @@ namespace greirat
     {
         private const string REMINDERS_WERE_ACTIVATED_MESSAGE = "All reminders from DB were activated";
         private const string REMINDER_INFO_MESSAGE = "```Every day (except weekends) at {0} send message '{1}' to the chat```";
+        private const string NO_REMINDER_IN_CHANNEL_MESSAGE = "No reminders in channel yet";
+        private const string REMINDER_WAS_REMOVED_MESSAGE = "Reminder was successfully removed";
+        private const string REMINDER_WAS_UPDATED_MESSAGE = "Reminder was successfully updated";
 
         private static List<VoteReminder> ActiveReminders { get; set; } = new();
 
@@ -42,33 +45,32 @@ namespace greirat
         public string GetVoteReminderInfo (ulong guildID, ulong channelID)
         {
             VoteRemindData channelReminderInfo = FindReminder(guildID, channelID)?.ReminderData;
-
-            return channelReminderInfo == null ? null : string.Format(REMINDER_INFO_MESSAGE, channelReminderInfo.TimeToRemind, channelReminderInfo.RemindMessage);
+            return channelReminderInfo == null ? NO_REMINDER_IN_CHANNEL_MESSAGE : string.Format(REMINDER_INFO_MESSAGE, channelReminderInfo.TimeToRemind, channelReminderInfo.RemindMessage);
         }
 
-        public bool TryDeleteChannelVoteReminder (ulong guildID, ulong channelID)
+        public string TryDeleteChannelVoteReminder (ulong guildID, ulong channelID)
         {
             VoteReminder channelReminderInfo = FindReminder(guildID, channelID);
 
             if (channelReminderInfo == null)
             {
-                return false;
+                return NO_REMINDER_IN_CHANNEL_MESSAGE;
             }
 
             channelReminderInfo.CancelActualReminderThread();
             ActiveReminders.Remove(channelReminderInfo);
             Program.DBManager.DeleteReminder(channelReminderInfo.ReminderData);
 
-            return true;
+            return REMINDER_WAS_REMOVED_MESSAGE;
         }
 
-        public bool TryUpdateChannelVoteReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind)
+        public string TryUpdateChannelVoteReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind)
         {
             VoteReminder reminderForThisChannel = FindReminder(context.Guild.Id, context.Message.Channel.Id);
-            
+
             if (reminderForThisChannel == null)
             {
-                return false;
+                return NO_REMINDER_IN_CHANNEL_MESSAGE;
             }
 
             reminderForThisChannel.ReminderData.TimeToRemind = timeOfDayWhereRemind;
@@ -76,7 +78,7 @@ namespace greirat
             Program.DBManager.UpdateReminder(reminderForThisChannel.ReminderData);
             reminderForThisChannel.TryStartReminderThread();
 
-            return true;
+            return REMINDER_WAS_UPDATED_MESSAGE;
         }
 
         private void CollectRemindersFromDB ()

@@ -19,27 +19,24 @@ namespace greirat
         [Summary(VoteReminderModuleDatabase.SHOW_REMINDER_COMMAND_DESCRIPTION)]
         public Task ShowChannelVoteReminderData ()
         {
-            string infoAboutReminder = Program.VoteRemindersController.GetVoteReminderInfo(Context.Guild.Id, Context.Message.Channel.Id);
-
-            return ReplyAsync(string.IsNullOrEmpty(infoAboutReminder) == true ? VoteReminderModuleDatabase.NO_REMINDER_IN_CHANNEL_MESSAGE : infoAboutReminder);
+            string resultMessage = Program.VoteRemindersController.GetVoteReminderInfo(Context.Guild.Id, Context.Message.Channel.Id);
+            return ReplyAsync(resultMessage);
         }
 
         [Command(CommandsDatabase.DELETE_COMMAND_NAME)]
         [Summary(VoteReminderModuleDatabase.DELETE_REMINDER_COMMAND_DESCRIPTION)]
         public Task DeleteChannelVoteReminder ()
         {
-            bool isOperationSucceed = Program.VoteRemindersController.TryDeleteChannelVoteReminder(Context.Guild.Id, Context.Message.Channel.Id);
-
-            return ReplyAsync(isOperationSucceed == true ? VoteReminderModuleDatabase.REMINDER_WAS_REMOVED_MESSAGE : VoteReminderModuleDatabase.NO_REMINDER_IN_CHANNEL_MESSAGE);
+            string resultMessage = Program.VoteRemindersController.TryDeleteChannelVoteReminder(Context.Guild.Id, Context.Message.Channel.Id);
+            return ReplyAsync(resultMessage);
         }
 
         [Command(CommandsDatabase.UPDATE_COMMAND_NAME)]
         [Summary(VoteReminderModuleDatabase.UPDATE_REMINDER_COMMAND_DESCRIPTION)]
         public Task UpdateChannelVoteReminder (string remindTime, [Remainder] string remindMessage)
         {
-            bool isOperationSucceed = Program.VoteRemindersController.TryUpdateChannelVoteReminder(Context, remindTime, remindMessage);
-
-            return ReplyAsync(isOperationSucceed == true ? VoteReminderModuleDatabase.REMINDER_WAS_UPDATED_MESSAGE : VoteReminderModuleDatabase.NO_REMINDER_IN_CHANNEL_MESSAGE);
+            string resultMessage = Program.VoteRemindersController.TryUpdateChannelVoteReminder(Context, remindTime, remindMessage);
+            return ReplyAsync(resultMessage);
         }
     }
 }

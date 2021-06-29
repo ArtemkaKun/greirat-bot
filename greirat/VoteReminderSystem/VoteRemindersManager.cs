@@ -22,24 +22,19 @@ namespace greirat
             Console.WriteLine(REMINDERS_WERE_ACTIVATED_MESSAGE);
         }
 
-        public string TryStartNewVoteReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind, int voteDurationInMinutes)
+        public string TryStartNewVoteReminder (SocketCommandContext context, SimpleReminderInfo reminderInfo)
         {
             if (FindReminder(context.Guild.Id, context.Message.Channel.Id) != null)
             {
                 return "Vote reminder already exists for this channel. Try delete it first or update its info.";
             }
 
-            if (voteDurationInMinutes == 0)
-            {
-                voteDurationInMinutes = 60;
-            }
-
-            VoteRemindData newReminderData = Program.DBManager.AddNewReminder(context, timeOfDayWhereRemind, messageToRemind, voteDurationInMinutes);
+            VoteRemindData newReminderData = Program.DBManager.AddNewReminder(context, reminderInfo.RemindTime, reminderInfo.RemindMessage, 60);
             VoteReminder newReminder = new(newReminderData);
             ActiveReminders.Add(newReminder);
             newReminder.TryStartReminderThread();
 
-            return string.Format(REMINDER_INFO_MESSAGE, timeOfDayWhereRemind, messageToRemind);
+            return string.Format(REMINDER_INFO_MESSAGE, reminderInfo.RemindTime, reminderInfo.RemindMessage);
         }
 
         public string GetVoteReminderInfo (SocketCommandContext commandContext)
@@ -64,7 +59,7 @@ namespace greirat
             return REMINDER_WAS_REMOVED_MESSAGE;
         }
 
-        public string TryUpdateChannelVoteReminder (SocketCommandContext context, string timeOfDayWhereRemind, string messageToRemind)
+        public string TryUpdateChannelVoteReminder (SocketCommandContext context, SimpleReminderInfo reminderInfo)
         {
             VoteReminder reminderForThisChannel = FindReminder(context.Guild.Id, context.Message.Channel.Id);
 
@@ -73,8 +68,8 @@ namespace greirat
                 return NO_REMINDER_IN_CHANNEL_MESSAGE;
             }
 
-            reminderForThisChannel.ReminderData.TimeToRemind = timeOfDayWhereRemind;
-            reminderForThisChannel.ReminderData.RemindMessage = messageToRemind;
+            reminderForThisChannel.ReminderData.TimeToRemind = reminderInfo.RemindTime;
+            reminderForThisChannel.ReminderData.RemindMessage = reminderInfo.RemindMessage;
             Program.DBManager.UpdateReminder(reminderForThisChannel.ReminderData);
             reminderForThisChannel.TryStartReminderThread();
 

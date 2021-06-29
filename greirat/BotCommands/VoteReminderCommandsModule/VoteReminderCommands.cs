@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Discord.Commands;
 
@@ -10,10 +9,9 @@ namespace greirat
     {
         [Command(CommandsDatabase.SET_COMMAND_NAME)]
         [Summary(VoteReminderModuleDatabase.SET_REMINDER_COMMAND_DESCRIPTION)]
-        public Task SetEverydayVoteReminder (string remindTime, [Optional] int voteDurationInMinutes, [Remainder] string remindMessage)
+        public Task SetEverydayVoteReminder (string remindTime, [Remainder] string remindMessage)
         {
-            string resultMessage = Program.VoteRemindersController.TryStartNewVoteReminder(Context, remindTime, remindMessage, voteDurationInMinutes);
-            return ReplyAsync(resultMessage);
+            return ProceedVoteReminderCommandWithReply(Program.VoteRemindersController.TryStartNewVoteReminder, new SimpleReminderInfo(remindTime, remindMessage));
         }
 
         [Command(CommandsDatabase.SHOW_COMMAND_NAME)]
@@ -34,13 +32,18 @@ namespace greirat
         [Summary(VoteReminderModuleDatabase.UPDATE_REMINDER_COMMAND_DESCRIPTION)]
         public Task UpdateChannelVoteReminder (string remindTime, [Remainder] string remindMessage)
         {
-            string resultMessage = Program.VoteRemindersController.TryUpdateChannelVoteReminder(Context, remindTime, remindMessage);
-            return ReplyAsync(resultMessage);
+            return ProceedVoteReminderCommandWithReply(Program.VoteRemindersController.TryUpdateChannelVoteReminder, new SimpleReminderInfo(remindTime, remindMessage));
         }
 
         private Task ProceedVoteReminderCommandWithReply (Func<SocketCommandContext, string> actionToPerform)
         {
             string resultMessage = actionToPerform?.Invoke(Context);
+            return ReplyAsync(resultMessage);
+        }
+        
+        private Task ProceedVoteReminderCommandWithReply (Func<SocketCommandContext, SimpleReminderInfo, string> actionToPerform, SimpleReminderInfo reminderInfo)
+        {
+            string resultMessage = actionToPerform?.Invoke(Context, reminderInfo);
             return ReplyAsync(resultMessage);
         }
     }

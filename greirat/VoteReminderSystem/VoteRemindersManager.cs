@@ -42,15 +42,15 @@ namespace greirat
             return string.Format(REMINDER_INFO_MESSAGE, timeOfDayWhereRemind, messageToRemind);
         }
 
-        public string GetVoteReminderInfo (ulong guildID, ulong channelID)
+        public string GetVoteReminderInfo (SocketCommandContext commandContext)
         {
-            VoteRemindData channelReminderInfo = FindReminder(guildID, channelID)?.ReminderData;
+            VoteRemindData channelReminderInfo = FindReminder(commandContext.Guild.Id, commandContext.Message.Channel.Id)?.ReminderData;
             return channelReminderInfo == null ? NO_REMINDER_IN_CHANNEL_MESSAGE : string.Format(REMINDER_INFO_MESSAGE, channelReminderInfo.TimeToRemind, channelReminderInfo.RemindMessage);
         }
 
-        public string TryDeleteChannelVoteReminder (ulong guildID, ulong channelID)
+        public string TryDeleteChannelVoteReminder (SocketCommandContext commandContext)
         {
-            VoteReminder channelReminderInfo = FindReminder(guildID, channelID);
+            VoteReminder channelReminderInfo = FindReminder(commandContext.Guild.Id, commandContext.Guild.Id);
 
             if (channelReminderInfo == null)
             {

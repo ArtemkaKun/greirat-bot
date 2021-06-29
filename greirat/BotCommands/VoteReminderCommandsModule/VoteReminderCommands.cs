@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Discord.Commands;
 
@@ -19,16 +20,14 @@ namespace greirat
         [Summary(VoteReminderModuleDatabase.SHOW_REMINDER_COMMAND_DESCRIPTION)]
         public Task ShowChannelVoteReminderData ()
         {
-            string resultMessage = Program.VoteRemindersController.GetVoteReminderInfo(Context.Guild.Id, Context.Message.Channel.Id);
-            return ReplyAsync(resultMessage);
+            return ProceedVoteReminderCommandWithReply(Program.VoteRemindersController.GetVoteReminderInfo);
         }
 
         [Command(CommandsDatabase.DELETE_COMMAND_NAME)]
         [Summary(VoteReminderModuleDatabase.DELETE_REMINDER_COMMAND_DESCRIPTION)]
         public Task DeleteChannelVoteReminder ()
         {
-            string resultMessage = Program.VoteRemindersController.TryDeleteChannelVoteReminder(Context.Guild.Id, Context.Message.Channel.Id);
-            return ReplyAsync(resultMessage);
+            return ProceedVoteReminderCommandWithReply(Program.VoteRemindersController.TryDeleteChannelVoteReminder);
         }
 
         [Command(CommandsDatabase.UPDATE_COMMAND_NAME)]
@@ -36,6 +35,12 @@ namespace greirat
         public Task UpdateChannelVoteReminder (string remindTime, [Remainder] string remindMessage)
         {
             string resultMessage = Program.VoteRemindersController.TryUpdateChannelVoteReminder(Context, remindTime, remindMessage);
+            return ReplyAsync(resultMessage);
+        }
+
+        private Task ProceedVoteReminderCommandWithReply (Func<SocketCommandContext, string> actionToPerform)
+        {
+            string resultMessage = actionToPerform?.Invoke(Context);
             return ReplyAsync(resultMessage);
         }
     }

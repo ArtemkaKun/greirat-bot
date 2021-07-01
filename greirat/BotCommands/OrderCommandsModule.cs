@@ -4,9 +4,13 @@ using greirat;
 
 namespace BotCommands
 {
-    [Group("order")]
+    [Group(ORDER_COMMANDS_GROUP_NAME)]
     public class OrderCommandsModule : ModuleBase<SocketCommandContext>
     {
+        private const string ORDER_COMMANDS_GROUP_NAME = "order";
+        private const string CREATE_NEW_ORDER_COMMAND_DESCRIPTION = "Creates a new order";
+        private const string UPDATE_USER_ORDER_COMMAND_DESCRIPTION = "Updates order with provided text";
+        private const string DELETE_ORDER_COMMAND_DESCRIPTION = "Deletes order";
         private const string ORDER_WAS_SAVED_MESSAGE = ORDER_WAS_SUCCESSFULLY_TEMPLATE_MESSAGE + "proceeded";
         private const string ORDER_WAS_UPDATED_MESSAGE = ORDER_WAS_SUCCESSFULLY_TEMPLATE_MESSAGE + "updated";
         private const string ORDER_WAS_REMOVED = ORDER_WAS_SUCCESSFULLY_TEMPLATE_MESSAGE + "removed";
@@ -14,8 +18,8 @@ namespace BotCommands
         private const string ORDER_DELETE_FAILED = "Failed to remove order";
         private const string ORDER_WAS_SUCCESSFULLY_TEMPLATE_MESSAGE = "Order was successfully ";
 
-        [Command("-mk")]
-        [Summary("Creates a new order")]
+        [Command(CommandsDatabase.MAKE_COMMAND_NAME)]
+        [Summary(CREATE_NEW_ORDER_COMMAND_DESCRIPTION)]
         public Task CreateNewOrder ([Remainder] string orderText)
         {
             Program.DBManager.AddNewOrder(Context.Message.Author.Username, orderText);
@@ -24,7 +28,7 @@ namespace BotCommands
         }
 
         [Command(CommandsDatabase.UPDATE_COMMAND_NAME)]
-        [Summary("Updates order with provided text")]
+        [Summary(UPDATE_USER_ORDER_COMMAND_DESCRIPTION)]
         public Task UpdateUserOrder (int idOfOrder, [Remainder] string newOrderText)
         {
             bool updateOperationResult = Program.DBManager.TryUpdateOrderData(Context.Message.Author.Username, idOfOrder, newOrderText);
@@ -33,7 +37,7 @@ namespace BotCommands
         }
 
         [Command(CommandsDatabase.DELETE_COMMAND_NAME)]
-        [Summary("Deletes order")]
+        [Summary(DELETE_ORDER_COMMAND_DESCRIPTION)]
         public Task DeleteOrder (int idOfOrder)
         {
             bool deleteOperationResult = Program.DBManager.TryDeleteOrderData(Context.Message.Author.Username, idOfOrder);

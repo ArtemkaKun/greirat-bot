@@ -27,9 +27,9 @@ namespace greirat
             Database.EnsureCreated();
         }
 
-        public string AddNewOrder (string personName, string orderMessage)
+        public string AddNewOrder (SimpleOrderInfo orderInfo)
         {
-            Add(new OrderData(GetTodayDateInStringForm(), personName, orderMessage));
+            Add(new OrderData(GetTodayDateInStringForm(), orderInfo.OrderOwner, orderInfo.OrderMessage));
             SaveChanges();
 
             return OrderCommandsModuleDatabase.ORDER_WAS_SAVED_MESSAGE;
@@ -45,24 +45,24 @@ namespace greirat
             return StoreOrdersDataInQueue(GetTodayOrdersEnumerator(order => order.PersonName == userName));
         }
 
-        public string TryUpdateOrderData (string requestFromUsername, int idOfOrder, string newOrderMessage)
+        public string TryUpdateOrderData (SimpleOrderInfo orderInfo)
         {
-            OrderData orderToUpdate = FindOrder(requestFromUsername, idOfOrder);
+            OrderData orderToUpdate = FindOrder(orderInfo.OrderOwner, orderInfo.OrderID);
 
             if (orderToUpdate == null)
             {
                 return OrderCommandsModuleDatabase.ORDER_UPDATE_FAILED;
             }
 
-            orderToUpdate.OrderText = newOrderMessage;
+            orderToUpdate.OrderText = orderInfo.OrderMessage;
             SaveChanges();
 
             return OrderCommandsModuleDatabase.ORDER_WAS_UPDATED_MESSAGE;
         }
 
-        public string TryDeleteOrderData (string requestFromUsername, int idOfOrder)
+        public string TryDeleteOrderData (SimpleOrderInfo orderInfo)
         {
-            OrderData orderToUpdate = FindOrder(requestFromUsername, idOfOrder);
+            OrderData orderToUpdate = FindOrder(orderInfo.OrderOwner, orderInfo.OrderID);
 
             if (orderToUpdate == null)
             {

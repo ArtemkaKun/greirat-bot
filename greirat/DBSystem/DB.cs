@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using BotCommands;
 using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -26,10 +27,12 @@ namespace greirat
             Database.EnsureCreated();
         }
 
-        public void AddNewOrder (string personName, string orderMessage)
+        public string AddNewOrder (string personName, string orderMessage)
         {
             Add(new OrderData(GetTodayDateInStringForm(), personName, orderMessage));
             SaveChanges();
+
+            return OrderCommandsModuleDatabase.ORDER_WAS_SAVED_MESSAGE;
         }
 
         public Queue<OrderData> GetTodayOrders ()
@@ -42,34 +45,34 @@ namespace greirat
             return StoreOrdersDataInQueue(GetTodayOrdersEnumerator(order => order.PersonName == userName));
         }
 
-        public bool TryUpdateOrderData (string requestFromUsername, int idOfOrder, string newOrderMessage)
+        public string TryUpdateOrderData (string requestFromUsername, int idOfOrder, string newOrderMessage)
         {
             OrderData orderToUpdate = FindOrder(requestFromUsername, idOfOrder);
 
             if (orderToUpdate == null)
             {
-                return false;
+                return OrderCommandsModuleDatabase.ORDER_UPDATE_FAILED;
             }
 
             orderToUpdate.OrderText = newOrderMessage;
             SaveChanges();
 
-            return true;
+            return OrderCommandsModuleDatabase.ORDER_WAS_UPDATED_MESSAGE;
         }
 
-        public bool TryDeleteOrderData (string requestFromUsername, int idOfOrder)
+        public string TryDeleteOrderData (string requestFromUsername, int idOfOrder)
         {
             OrderData orderToUpdate = FindOrder(requestFromUsername, idOfOrder);
 
             if (orderToUpdate == null)
             {
-                return false;
+                return OrderCommandsModuleDatabase.ORDER_DELETE_FAILED;
             }
 
             Remove(orderToUpdate);
             SaveChanges();
 
-            return true;
+            return OrderCommandsModuleDatabase.ORDER_WAS_REMOVED;
         }
 
         public VoteRemindData AddNewReminder (SocketCommandContext messageData, string timeToRemind, string messageToRemind, int voteDurationInMinutes)

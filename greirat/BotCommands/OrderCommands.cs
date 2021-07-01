@@ -5,7 +5,7 @@ using greirat;
 namespace BotCommands
 {
     [Group(ORDER_COMMANDS_GROUP_NAME)]
-    public class OrderCommandsModule : ModuleBase<SocketCommandContext>
+    public class OrderCommands : ModuleBase<SocketCommandContext>
     {
         private const string ORDER_COMMANDS_GROUP_NAME = "order";
         private const string CREATE_NEW_ORDER_COMMAND_DESCRIPTION = "Creates a new order";

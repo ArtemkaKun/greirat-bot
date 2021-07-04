@@ -45,7 +45,7 @@ namespace greirat
 
         public string TryDeleteChannelVoteReminder (SocketCommandContext commandContext)
         {
-            VoteReminder channelReminderInfo = FindReminder(commandContext.Guild.Id, commandContext.Guild.Id);
+            VoteReminder channelReminderInfo = FindReminder(commandContext.Guild.Id, commandContext.Message.Channel.Id);
 
             if (channelReminderInfo == null)
             {

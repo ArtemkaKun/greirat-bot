@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Discord.Commands;
+using greirat;
 
-namespace greirat
+namespace BotCommands
 {
     public class HelpCommandsModule : ModuleBase<SocketCommandContext>
     {

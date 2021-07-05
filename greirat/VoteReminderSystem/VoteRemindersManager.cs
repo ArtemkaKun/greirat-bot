@@ -40,15 +40,15 @@ namespace VoteReminderSystem
 				ActiveReminders[reminderPointer].TryStartReminderThread();
 			}
 		}
-
-		public string TryStartNewVoteReminder (SocketCommandContext context, SimpleReminderInfo reminderInfo)
+ 
+		public string TryStartNewVoteReminder (SocketCommandContext commandContext, SimpleReminderInfo reminderInfo)
 		{
-			if (FindReminder(context.Guild.Id, context.Message.Channel.Id) != null)
+			if (FindReminder(commandContext) != null)
 			{
 				return "Vote reminder already exists for this channel. Try delete it first or update its info.";
 			}
 
-			VoteRemindData newReminderData = Program.DBManager.AddNewReminder(context, reminderInfo.RemindTime, reminderInfo.RemindMessage, 60);
+			VoteRemindData newReminderData = Program.DBManager.AddNewReminder(commandContext, reminderInfo.RemindTime, reminderInfo.RemindMessage, 60);
 			VoteReminder newReminder = new(newReminderData);
 			ActiveReminders.Add(newReminder);
 			newReminder.TryStartReminderThread();
@@ -58,13 +58,13 @@ namespace VoteReminderSystem
 
 		public string GetVoteReminderInfo (SocketCommandContext commandContext)
 		{
-			VoteRemindData channelReminderInfo = FindReminder(commandContext.Guild.Id, commandContext.Message.Channel.Id)?.ReminderData;
+			VoteRemindData channelReminderInfo = FindReminder(commandContext)?.ReminderData;
 			return channelReminderInfo == null ? NO_REMINDER_IN_CHANNEL_MESSAGE : string.Format(REMINDER_INFO_MESSAGE, channelReminderInfo.TimeToRemind, channelReminderInfo.RemindMessage);
 		}
 
 		public string TryDeleteChannelVoteReminder (SocketCommandContext commandContext)
 		{
-			VoteReminder channelReminderInfo = FindReminder(commandContext.Guild.Id, commandContext.Message.Channel.Id);
+			VoteReminder channelReminderInfo = FindReminder(commandContext);
 
 			if (channelReminderInfo == null)
 			{
@@ -78,9 +78,9 @@ namespace VoteReminderSystem
 			return REMINDER_WAS_REMOVED_MESSAGE;
 		}
 
-		public string TryUpdateChannelVoteReminder (SocketCommandContext context, SimpleReminderInfo reminderInfo)
+		public string TryUpdateChannelVoteReminder (SocketCommandContext commandContext, SimpleReminderInfo reminderInfo)
 		{
-			VoteReminder reminderForThisChannel = FindReminder(context.Guild.Id, context.Message.Channel.Id);
+			VoteReminder reminderForThisChannel = FindReminder(commandContext);
 
 			if (reminderForThisChannel == null)
 			{
@@ -95,13 +95,13 @@ namespace VoteReminderSystem
 			return REMINDER_WAS_UPDATED_MESSAGE;
 		}
 
-		private VoteReminder FindReminder (ulong guildID, ulong channelID)
+		private VoteReminder FindReminder (SocketCommandContext context)
 		{
 			for (int reminderPointer = 0; reminderPointer < ActiveReminders.Count; reminderPointer++)
 			{
 				VoteReminder currentReminder = ActiveReminders[reminderPointer];
 
-				if ((currentReminder.ReminderData.GuildID == guildID) && (currentReminder.ReminderData.ChannelID == channelID))
+				if ((currentReminder.ReminderData.GuildID == context.Guild.Id) && (currentReminder.ReminderData.ChannelID == context.Message.Channel.Id))
 				{
 					return currentReminder;
 				}

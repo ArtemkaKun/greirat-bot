@@ -12,6 +12,7 @@ namespace VoteReminderSystem
 		private const string NO_REMINDER_IN_CHANNEL_MESSAGE = "No reminders in channel yet";
 		private const string REMINDER_WAS_REMOVED_MESSAGE = "Reminder was successfully removed";
 		private const string REMINDER_WAS_UPDATED_MESSAGE = "Reminder was successfully updated";
+		private const string VOTE_REMINDER_ALREADY_EXISTS_MESSAGE = "Vote reminder already exists for this channel. Try delete it first or update its info.";
 
 		private static List<VoteReminder> ActiveReminders { get; set; } = new();
 
@@ -40,20 +41,27 @@ namespace VoteReminderSystem
 				ActiveReminders[reminderPointer].TryStartReminderThread();
 			}
 		}
- 
+
 		public string TryStartNewVoteReminder (SocketCommandContext commandContext, SimpleReminderInfo reminderInfo)
 		{
 			if (FindReminder(commandContext) != null)
 			{
-				return "Vote reminder already exists for this channel. Try delete it first or update its info.";
+				return VOTE_REMINDER_ALREADY_EXISTS_MESSAGE;
 			}
 
-			VoteRemindData newReminderData = Program.DBManager.AddNewReminder(commandContext, reminderInfo.RemindTime, reminderInfo.RemindMessage, 60);
-			VoteReminder newReminder = new(newReminderData);
-			ActiveReminders.Add(newReminder);
+			VoteReminder newReminder = CreateNewReminder(commandContext, reminderInfo);
 			newReminder.TryStartReminderThread();
 
 			return string.Format(REMINDER_INFO_MESSAGE, reminderInfo.RemindTime, reminderInfo.RemindMessage);
+		}
+
+		private VoteReminder CreateNewReminder (SocketCommandContext commandContext, SimpleReminderInfo reminderInfo)
+		{
+			VoteRemindData newReminderData = Program.DBManager.AddNewReminder(commandContext, reminderInfo);
+			VoteReminder newReminder = new(newReminderData);
+			ActiveReminders.Add(newReminder);
+
+			return newReminder;
 		}
 
 		public string GetVoteReminderInfo (SocketCommandContext commandContext)

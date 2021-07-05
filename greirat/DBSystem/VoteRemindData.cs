@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Discord.Commands;
+using VoteReminderSystem;
 
 namespace greirat
 {
@@ -22,6 +24,15 @@ namespace greirat
 			TimeToRemind = timeToRemind;
 			RemindMessage = remindMessage;
 			VoteDurationInMinutes = voteDurationInMinutes;
+		}
+
+		public VoteRemindData (SocketCommandContext messageData, SimpleReminderInfo reminderInfo)
+		{
+			GuildID = messageData.Guild.Id;
+			ChannelID = messageData.Message.Channel.Id;
+			TimeToRemind = reminderInfo.RemindTime;
+			RemindMessage = reminderInfo.RemindMessage;
+			VoteDurationInMinutes = 60;
 		}
 	}
 }

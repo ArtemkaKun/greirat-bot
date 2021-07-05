@@ -6,6 +6,7 @@ using BotCommands;
 using Discord.Commands;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using VoteReminderSystem;
 
 namespace greirat
 {
@@ -75,9 +76,9 @@ namespace greirat
 			return OrderCommandsModuleDatabase.ORDER_WAS_REMOVED;
 		}
 
-		public VoteRemindData AddNewReminder (SocketCommandContext messageData, string timeToRemind, string messageToRemind, int voteDurationInMinutes)
+		public VoteRemindData AddNewReminder (SocketCommandContext messageData, SimpleReminderInfo reminderInfo)
 		{
-			EntityEntry<VoteRemindData> createdReminder = Add(new VoteRemindData(messageData.Guild.Id, messageData.Message.Channel.Id, timeToRemind, messageToRemind, voteDurationInMinutes));
+			EntityEntry<VoteRemindData> createdReminder = Add(new VoteRemindData(messageData, reminderInfo));
 			SaveChanges();
 			return createdReminder.Entity;
 		}

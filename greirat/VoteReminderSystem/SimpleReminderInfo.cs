@@ -2,13 +2,13 @@
 {
 	public class SimpleReminderInfo
 	{
-		public string RemindTime { get; }
-		public string RemindMessage { get; }
+		public string Time { get; }
+		public string Message { get; }
 
-		public SimpleReminderInfo (string remindTime, string remindMessage)
+		public SimpleReminderInfo (string time, string message)
 		{
-			RemindTime = remindTime;
-			RemindMessage = remindMessage;
+			Time = time;
+			Message = message;
 		}
 	}
 }

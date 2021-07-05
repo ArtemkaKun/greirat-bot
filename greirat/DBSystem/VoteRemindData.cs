@@ -30,8 +30,8 @@ namespace greirat
 		{
 			GuildID = messageData.Guild.Id;
 			ChannelID = messageData.Message.Channel.Id;
-			TimeToRemind = reminderInfo.RemindTime;
-			RemindMessage = reminderInfo.RemindMessage;
+			TimeToRemind = reminderInfo.Time;
+			RemindMessage = reminderInfo.Message;
 			VoteDurationInMinutes = 60;
 		}
 	}

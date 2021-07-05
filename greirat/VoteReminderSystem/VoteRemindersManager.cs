@@ -52,7 +52,7 @@ namespace VoteReminderSystem
 			VoteReminder newReminder = CreateNewReminder(commandContext, reminderInfo);
 			newReminder.TryStartReminderThread();
 
-			return string.Format(REMINDER_INFO_MESSAGE, reminderInfo.RemindTime, reminderInfo.RemindMessage);
+			return string.Format(REMINDER_INFO_MESSAGE, reminderInfo.Time, reminderInfo.Message);
 		}
 
 		private VoteReminder CreateNewReminder (SocketCommandContext commandContext, SimpleReminderInfo reminderInfo)
@@ -95,8 +95,8 @@ namespace VoteReminderSystem
 				return NO_REMINDER_IN_CHANNEL_MESSAGE;
 			}
 
-			reminderForThisChannel.ReminderData.TimeToRemind = reminderInfo.RemindTime;
-			reminderForThisChannel.ReminderData.RemindMessage = reminderInfo.RemindMessage;
+			reminderForThisChannel.ReminderData.TimeToRemind = reminderInfo.Time;
+			reminderForThisChannel.ReminderData.RemindMessage = reminderInfo.Message;
 			Program.DBManager.UpdateReminder(reminderForThisChannel.ReminderData);
 			reminderForThisChannel.TryStartReminderThread();
 

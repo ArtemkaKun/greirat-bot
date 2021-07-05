@@ -3,25 +3,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace greirat
 {
-    [Table("FoodReminders")]
-    public class VoteRemindData
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key]
-        public int ReminderID { get; private set; }
-        public ulong GuildID { get; private set; }
-        public ulong ChannelID { get; private set; }
-        public string TimeToRemind { get; set; }
-        public string RemindMessage { get; set; }
-        public int VoteDurationInMinutes { get; set; }
+	[Table("FoodReminders")]
+	public class VoteRemindData
+	{
+		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+		[Key]
+		public int ReminderID { get; private set; }
+		public ulong GuildID { get; private set; }
+		public ulong ChannelID { get; private set; }
+		public string TimeToRemind { get; set; }
+		public string RemindMessage { get; set; }
+		public int VoteDurationInMinutes { get; set; }
 
-        public VoteRemindData (ulong guildID, ulong channelID, string timeToRemind, string remindMessage, int voteDurationInMinutes)
-        {
-            GuildID = guildID;
-            ChannelID = channelID;
-            TimeToRemind = timeToRemind;
-            RemindMessage = remindMessage;
-            VoteDurationInMinutes = voteDurationInMinutes;
-        }
-    }
+		public VoteRemindData (ulong guildID, ulong channelID, string timeToRemind, string remindMessage, int voteDurationInMinutes)
+		{
+			GuildID = guildID;
+			ChannelID = channelID;
+			TimeToRemind = timeToRemind;
+			RemindMessage = remindMessage;
+			VoteDurationInMinutes = voteDurationInMinutes;
+		}
+	}
 }

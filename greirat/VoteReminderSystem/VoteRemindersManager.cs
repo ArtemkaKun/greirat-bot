@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord.Commands;
+using greirat;
 
-namespace greirat
+namespace VoteReminderSystem
 {
     public class VoteRemindersManager
     {

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using greirat;
 
-namespace greirat
+namespace VoteReminderSystem
 {
     public class VoteReminder
     {

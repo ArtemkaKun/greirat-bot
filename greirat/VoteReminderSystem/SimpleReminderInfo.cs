@@ -1,4 +1,4 @@
-﻿namespace greirat
+﻿namespace VoteReminderSystem
 {
     public class SimpleReminderInfo
     {

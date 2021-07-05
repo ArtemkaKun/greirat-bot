@@ -103,8 +103,7 @@ namespace greirat
 				return;
 			}
 
-			reminder.TimeToRemind = reminderToUpdate.TimeToRemind;
-			reminder.RemindMessage = reminderToUpdate.RemindMessage;
+			reminder.UpdateReminderData(reminderToUpdate);
 			SaveChanges();
 		}
 

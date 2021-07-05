@@ -13,9 +13,9 @@ namespace greirat
 		public int ReminderID { get; private set; }
 		public ulong GuildID { get; private set; }
 		public ulong ChannelID { get; private set; }
-		public string TimeToRemind { get; set; }
-		public string RemindMessage { get; set; }
-		public int VoteDurationInMinutes { get; set; }
+		public string TimeToRemind { get; private set; }
+		public string RemindMessage { get; private set; }
+		public int VoteDurationInMinutes { get; private set; }
 
 		public VoteRemindData (ulong guildID, ulong channelID, string timeToRemind, string remindMessage, int voteDurationInMinutes)
 		{
@@ -33,6 +33,18 @@ namespace greirat
 			TimeToRemind = reminderInfo.Time;
 			RemindMessage = reminderInfo.Message;
 			VoteDurationInMinutes = 60;
+		}
+
+		public void UpdateReminderData (SimpleReminderInfo newData)
+		{
+			TimeToRemind = newData.Time;
+			RemindMessage = newData.Message;
+		}
+		
+		public void UpdateReminderData (VoteRemindData newData)
+		{
+			TimeToRemind = newData.TimeToRemind;
+			RemindMessage = newData.RemindMessage;
 		}
 	}
 }

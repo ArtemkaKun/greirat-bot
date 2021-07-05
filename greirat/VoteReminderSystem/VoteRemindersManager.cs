@@ -95,8 +95,7 @@ namespace VoteReminderSystem
 				return NO_REMINDER_IN_CHANNEL_MESSAGE;
 			}
 
-			reminderForThisChannel.ReminderData.TimeToRemind = reminderInfo.Time;
-			reminderForThisChannel.ReminderData.RemindMessage = reminderInfo.Message;
+			reminderForThisChannel.UpdateReminderData(reminderInfo);
 			Program.DBManager.UpdateReminder(reminderForThisChannel.ReminderData);
 			reminderForThisChannel.TryStartReminderThread();
 

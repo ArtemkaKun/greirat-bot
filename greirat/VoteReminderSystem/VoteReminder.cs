@@ -41,6 +41,11 @@ namespace VoteReminderSystem
 			ReminderTimerTask.Dispose();
 		}
 
+		public void UpdateReminderData (SimpleReminderInfo newData)
+		{
+			ReminderData.UpdateReminderData(newData);
+		}
+
 		private void SetUpCancellationMembers ()
 		{
 			ReminderCancellationProvider = new CancellationTokenSource();

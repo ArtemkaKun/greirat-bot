@@ -37,6 +37,13 @@ namespace BotCommands
 			return ProceedVoteReminderCommandWithReply(Program.VoteRemindersController.TryUpdateChannelVoteReminder, new SimpleReminderInfo(remindTime, remindMessage));
 		}
 
+		[Command("-config")]
+		public Task SetReminderConfigData (int durationInMinutes, [Remainder] string voteFinishMessage)
+		{
+			string resultMessage = Program.VoteRemindersController.TrySetReminderConfigData(Context, durationInMinutes, voteFinishMessage);
+			return ReplyAsync(resultMessage);
+		}
+
 		private Task ProceedVoteReminderCommandWithReply (Func<SocketCommandContext, string> actionToPerform)
 		{
 			string resultMessage = actionToPerform?.Invoke(Context);

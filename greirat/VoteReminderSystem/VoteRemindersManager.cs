@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DBSystem;
 using Discord.Commands;
 using greirat;
 
@@ -100,6 +101,22 @@ namespace VoteReminderSystem
 			reminderForThisChannel.TryStartReminderThread();
 
 			return REMINDER_WAS_UPDATED_MESSAGE;
+		}
+
+		public string TrySetReminderConfigData (SocketCommandContext commandContext, int voteDuration, string voteFinishedMessage)
+		{
+			VoteReminder reminderForThisChannel = FindReminder(commandContext);
+
+			if (reminderForThisChannel == null)
+			{
+				return NO_REMINDER_IN_CHANNEL_MESSAGE;
+			}
+			
+			reminderForThisChannel.ReminderData.SetVoteConfigData(voteDuration, voteFinishedMessage);
+			Program.DBManager.UpdateReminder(reminderForThisChannel.ReminderData);
+			reminderForThisChannel.TryStartReminderThread();
+
+			return "Reminder config data was set up successfully";
 		}
 
 		private VoteReminder FindReminder (SocketCommandContext context)

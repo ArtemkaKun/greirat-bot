@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using DBSystem;
+using greirat;
 
-namespace greirat.Helpers
+namespace Helpers
 {
 	public class OrderDataAsciiTableConverter : AsciiTableConverter
 	{

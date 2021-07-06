@@ -1,8 +1,8 @@
 ﻿using System.Data;
 using System.Text;
-using greirat.External;
+using External;
 
-namespace greirat.Helpers
+namespace Helpers
 {
 	public class AsciiTableConverter
 	{

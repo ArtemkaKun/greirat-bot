@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using DBSystem;
 using greirat;
 
 namespace VoteReminderSystem
@@ -55,7 +56,6 @@ namespace VoteReminderSystem
 		private bool CheckIfCanStartReminderThread ()
 		{
 			string timeForRemind = ReminderData.TimeToRemind;
-
 			return (string.IsNullOrEmpty(timeForRemind) == false) && (TimeSpan.TryParse(timeForRemind, out _) == true);
 		}
 
@@ -93,7 +93,7 @@ namespace VoteReminderSystem
 					return;
 				}
 
-				await Program.BotClient.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, "@+Food Voting finished. Make an order asap");
+				await Program.BotClient.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, ReminderData.VoteFinishMessage);
 			}
 		}
 
@@ -108,7 +108,6 @@ namespace VoteReminderSystem
 		private bool CheckIfTodayIsWeekend ()
 		{
 			DayOfWeek todayDay = DateTime.Today.DayOfWeek;
-
 			return todayDay is DayOfWeek.Saturday or DayOfWeek.Sunday;
 		}
 	}

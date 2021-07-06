@@ -4,11 +4,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using BotCommands;
 using Discord.Commands;
+using greirat;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using VoteReminderSystem;
 
-namespace greirat
+namespace DBSystem
 {
 	public class DB : DbContext
 	{
@@ -80,7 +81,7 @@ namespace greirat
 		{
 			EntityEntry<VoteRemindData> createdReminder = Add(new VoteRemindData(messageData, reminderInfo));
 			SaveChanges();
-			return createdReminder.Entity;
+			return new VoteRemindData(createdReminder.Entity);
 		}
 
 		public Stack<VoteRemindData> GetAllRemindersFromDB ()

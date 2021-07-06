@@ -5,7 +5,7 @@ using System.Text;
 using Discord.Commands;
 using ParameterInfo = System.Reflection.ParameterInfo;
 
-namespace greirat.Helpers
+namespace Helpers
 {
 	public class HelpInfoAsciiTableConverter : AsciiTableConverter
 	{
@@ -45,7 +45,6 @@ namespace greirat.Helpers
 		private StringBuilder FormCommandsShowData (MethodInfo[] commandMethods)
 		{
 			FillTableWithData(commandMethods);
-
 			return GetAsciiTableBuilder(ShowHelpResultsDataTable);
 		}
 

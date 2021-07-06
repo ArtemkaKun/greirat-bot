@@ -1,17 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace greirat
+namespace DBSystem
 {
 	[Table("Orders")]
 	public class OrderData
 	{
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Key]
-		public int OrderID { get; private set; }
+		public int OrderID { get; private set;}
 		public string OrderDate { get; private set; }
-		public string PersonName { get; private set; }
-		public string OrderText { get; set; }
+		public string PersonName { get; private set;}
+		public string OrderText { get; set;}
 
 		public OrderData (string orderDate, string personName, string orderText)
 		{

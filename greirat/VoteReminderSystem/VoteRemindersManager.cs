@@ -14,6 +14,7 @@ namespace VoteReminderSystem
 		private const string REMINDER_WAS_REMOVED_MESSAGE = "Reminder was successfully removed";
 		private const string REMINDER_WAS_UPDATED_MESSAGE = "Reminder was successfully updated";
 		private const string VOTE_REMINDER_ALREADY_EXISTS_MESSAGE = "Vote reminder already exists for this channel. Try delete it first or update its info.";
+		private const string REMINDER_CONFIG_WAS_SET_UP_MESSAGE = "Reminder config data was set up successfully";
 
 		private static List<VoteReminder> ActiveReminders { get; set; } = new();
 
@@ -116,7 +117,7 @@ namespace VoteReminderSystem
 			Program.DBManager.UpdateReminder(reminderForThisChannel.ReminderData);
 			reminderForThisChannel.TryStartReminderThread();
 
-			return "Reminder config data was set up successfully";
+			return REMINDER_CONFIG_WAS_SET_UP_MESSAGE;
 		}
 
 		private VoteReminder FindReminder (SocketCommandContext context)

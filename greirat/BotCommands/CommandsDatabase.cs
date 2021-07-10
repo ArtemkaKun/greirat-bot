@@ -8,5 +8,6 @@
 		public const string SHOW_COMMAND_NAME = "-sh";
 		public const string DELETE_COMMAND_NAME = "-del";
 		public const string UPDATE_COMMAND_NAME = "-upd";
+		public const string CONFIG_COMMAND_NAME = "-config";
 	}
 }

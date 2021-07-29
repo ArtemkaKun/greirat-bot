@@ -40,6 +40,7 @@ namespace DBSystem
 
 		public VoteRemindData (VoteRemindData newVoteRemindData)
 		{
+			ReminderID = newVoteRemindData.ReminderID;
 			GuildID = newVoteRemindData.GuildID;
 			ChannelID = newVoteRemindData.ChannelID;
 			TimeToRemind = newVoteRemindData.TimeToRemind;

@@ -82,7 +82,7 @@ namespace VoteReminderSystem
 					continue;
 				}
 
-				await Program.BotClient.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, ReminderData.RemindMessage);
+				await Program.BotClient.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, string.IsNullOrEmpty(ReminderData.RemindMessage) == false ? ReminderData.RemindMessage : "Let's order some food");
 
 				try
 				{
@@ -93,7 +93,7 @@ namespace VoteReminderSystem
 					return;
 				}
 
-				await Program.BotClient.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, ReminderData.VoteFinishMessage);
+				await Program.BotClient.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, string.IsNullOrEmpty(ReminderData.VoteFinishMessage) == false ? ReminderData.VoteFinishMessage : "Food voting was finished");
 			}
 		}
 

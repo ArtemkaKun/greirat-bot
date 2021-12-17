@@ -12,28 +12,45 @@ namespace BotCommands
 		[Summary(OrderCommandsModuleDatabase.CREATE_NEW_ORDER_COMMAND_DESCRIPTION)]
 		public Task CreateNewOrder ([Remainder] string orderText)
 		{
-			return ProceedOrderCommandWithReply(Program.DBManager.AddNewOrder, new SimpleOrderInfo(orderText));
+			return ProceedOrderCommandWithReply(Program.DBManager.AddNewOrder, new OrderInfo
+			{
+				Text = orderText,
+				OwnerName = GetOrderOwnerName()
+			});
 		}
 
 		[Command(CommandsDatabase.UPDATE_COMMAND_NAME)]
 		[Summary(OrderCommandsModuleDatabase.UPDATE_USER_ORDER_COMMAND_DESCRIPTION)]
 		public Task UpdateUserOrder (int idOfOrder, [Remainder] string newOrderText)
 		{
-			return ProceedOrderCommandWithReply(Program.DBManager.TryUpdateOrderData, new SimpleOrderInfo(idOfOrder, newOrderText));
+			return ProceedOrderCommandWithReply(Program.DBManager.TryUpdateOrderData, new OrderInfo
+			{
+				ID = idOfOrder,
+				Text = newOrderText,
+				OwnerName = GetOrderOwnerName()
+			});
 		}
 
 		[Command(CommandsDatabase.DELETE_COMMAND_NAME)]
 		[Summary(OrderCommandsModuleDatabase.DELETE_ORDER_COMMAND_DESCRIPTION)]
 		public Task DeleteOrder (int idOfOrder)
 		{
-			return ProceedOrderCommandWithReply(Program.DBManager.TryDeleteOrderData, new SimpleOrderInfo(idOfOrder));
+			return ProceedOrderCommandWithReply(Program.DBManager.TryDeleteOrderData, new OrderInfo
+			{
+				ID = idOfOrder,
+				OwnerName = GetOrderOwnerName()
+			});
 		}
 
-		private Task ProceedOrderCommandWithReply (Func<SimpleOrderInfo, string> actionToPerform, SimpleOrderInfo orderInfo)
+		private Task ProceedOrderCommandWithReply (Func<OrderInfo, string> actionToPerform, OrderInfo orderInfo)
 		{
-			orderInfo.SetOrderOwner(Context.Message.Author.Username);
-			string operationResult = actionToPerform?.Invoke(orderInfo);
+			string operationResult = actionToPerform.Invoke(orderInfo);
 			return ReplyAsync(operationResult);
+		}
+
+		private string GetOrderOwnerName ()
+		{
+			return Context.Message.Author.Username;
 		}
 	}
 }

@@ -11,9 +11,14 @@ namespace BotCommands
 	{
 		[Command(CommandsDatabase.SET_COMMAND_NAME)]
 		[Summary(VoteReminderModuleDatabase.SET_REMINDER_COMMAND_DESCRIPTION)]
-		public Task SetEverydayVoteReminder (string remindTime, [Remainder] string remindMessage)
+		public Task SetEverydayVoteReminder (string startTime, int durationInSeconds, string startMessage, string finishMessage)
 		{
-			return ProceedVoteReminderCommandWithReply(Program.VoteRemindersController.TryStartNewVoteReminder, new SimpleReminderInfo(remindTime, remindMessage));
+			if (TimeSpan.TryParse(startTime, out TimeSpan parsedTime) == true)
+			{
+				return ProceedVoteReminderCommandWithReply(Program.VoteRemindersController.TryStartNewVoteReminder, new VoteReminderInfo(parsedTime, startMessage, durationInSeconds, finishMessage));
+			}
+
+			return Task.CompletedTask;
 		}
 
 		[Command(CommandsDatabase.SHOW_COMMAND_NAME)]
@@ -30,19 +35,13 @@ namespace BotCommands
 			return ProceedVoteReminderCommandWithReply(Program.VoteRemindersController.TryDeleteChannelVoteReminder);
 		}
 
-		[Command(CommandsDatabase.UPDATE_COMMAND_NAME)]
-		[Summary(VoteReminderModuleDatabase.UPDATE_REMINDER_COMMAND_DESCRIPTION)]
-		public Task UpdateChannelVoteReminder (string remindTime, [Remainder] string remindMessage)
-		{
-			return ProceedVoteReminderCommandWithReply(Program.VoteRemindersController.TryUpdateChannelVoteReminder, new SimpleReminderInfo(remindTime, remindMessage));
-		}
-
-		[Command(CommandsDatabase.CONFIG_COMMAND_NAME)]
-		public Task SetReminderConfigData (int durationInMinutes, [Remainder] string voteFinishMessage)
-		{
-			string resultMessage = Program.VoteRemindersController.TrySetReminderConfigData(Context, durationInMinutes, voteFinishMessage);
-			return ReplyAsync(resultMessage);
-		}
+		//Logic was changed, need to update separate stuff with separate commands. 17.12.2021. Artem Yurchenko
+		// [Command(CommandsDatabase.UPDATE_COMMAND_NAME)]
+		// [Summary(VoteReminderModuleDatabase.UPDATE_REMINDER_COMMAND_DESCRIPTION)]
+		// public Task UpdateChannelVoteReminder (string remindTime, [Remainder] string remindMessage)
+		// {
+		// 	return ProceedVoteReminderCommandWithReply(Program.VoteRemindersController.TryUpdateChannelVoteReminder, new VoteReminderInfo(remindTime, remindMessage));
+		// }
 
 		private Task ProceedVoteReminderCommandWithReply (Func<SocketCommandContext, string> actionToPerform)
 		{
@@ -50,7 +49,7 @@ namespace BotCommands
 			return ReplyAsync(resultMessage);
 		}
 
-		private Task ProceedVoteReminderCommandWithReply (Func<SocketCommandContext, SimpleReminderInfo, string> actionToPerform, SimpleReminderInfo reminderInfo)
+		private Task ProceedVoteReminderCommandWithReply (Func<SocketCommandContext, VoteReminderInfo, string> actionToPerform, VoteReminderInfo reminderInfo)
 		{
 			string resultMessage = actionToPerform?.Invoke(Context, reminderInfo);
 			return ReplyAsync(resultMessage);

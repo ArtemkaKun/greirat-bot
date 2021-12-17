@@ -14,7 +14,6 @@ namespace VoteReminderSystem
 		private const string REMINDER_WAS_REMOVED_MESSAGE = "Reminder was successfully removed";
 		private const string REMINDER_WAS_UPDATED_MESSAGE = "Reminder was successfully updated";
 		private const string VOTE_REMINDER_ALREADY_EXISTS_MESSAGE = "Vote reminder already exists for this channel. Try delete it first or update its info.";
-		private const string REMINDER_CONFIG_WAS_SET_UP_MESSAGE = "Reminder config data was set up successfully";
 
 		private static List<VoteReminder> ActiveReminders { get; set; } = new();
 
@@ -27,7 +26,7 @@ namespace VoteReminderSystem
 
 		private void CollectRemindersFromDB ()
 		{
-			Stack<VoteRemindData> remindersCollection = Program.DBManager.GetAllRemindersFromDB();
+			Stack<VoteData> remindersCollection = Program.DBManager.GetAllRemindersFromDB();
 			ActiveReminders = new List<VoteReminder>(remindersCollection.Count);
 
 			while (remindersCollection.Count > 0)
@@ -44,7 +43,7 @@ namespace VoteReminderSystem
 			}
 		}
 
-		public string TryStartNewVoteReminder (SocketCommandContext commandContext, SimpleReminderInfo reminderInfo)
+		public string TryStartNewVoteReminder (SocketCommandContext commandContext, VoteReminderInfo reminderInfo)
 		{
 			if (FindReminder(commandContext) != null)
 			{
@@ -54,12 +53,12 @@ namespace VoteReminderSystem
 			VoteReminder newReminder = CreateNewReminder(commandContext, reminderInfo);
 			newReminder.TryStartReminderThread();
 
-			return string.Format(REMINDER_INFO_MESSAGE, reminderInfo.Time, reminderInfo.Message);
+			return string.Format(REMINDER_INFO_MESSAGE, reminderInfo.StartTime, reminderInfo.StartMessage);
 		}
 
-		private VoteReminder CreateNewReminder (SocketCommandContext commandContext, SimpleReminderInfo reminderInfo)
+		private VoteReminder CreateNewReminder (SocketCommandContext commandContext, VoteReminderInfo reminderInfo)
 		{
-			VoteRemindData newReminderData = Program.DBManager.AddNewReminder(commandContext, reminderInfo);
+			VoteData newReminderData = Program.DBManager.AddNewReminder(commandContext, reminderInfo);
 			VoteReminder newReminder = new(newReminderData);
 			ActiveReminders.Add(newReminder);
 
@@ -68,8 +67,8 @@ namespace VoteReminderSystem
 
 		public string GetVoteReminderInfo (SocketCommandContext commandContext)
 		{
-			VoteRemindData channelReminderInfo = FindReminder(commandContext)?.ReminderData;
-			return channelReminderInfo == null ? NO_REMINDER_IN_CHANNEL_MESSAGE : string.Format(REMINDER_INFO_MESSAGE, channelReminderInfo.TimeToRemind, channelReminderInfo.RemindMessage);
+			VoteData channelReminderInfo = FindReminder(commandContext)?.ReminderData;
+			return channelReminderInfo == null ? NO_REMINDER_IN_CHANNEL_MESSAGE : string.Format(REMINDER_INFO_MESSAGE, channelReminderInfo.StartTime, channelReminderInfo.StartMessage);
 		}
 
 		public string TryDeleteChannelVoteReminder (SocketCommandContext commandContext)
@@ -88,37 +87,22 @@ namespace VoteReminderSystem
 			return REMINDER_WAS_REMOVED_MESSAGE;
 		}
 
-		public string TryUpdateChannelVoteReminder (SocketCommandContext commandContext, SimpleReminderInfo reminderInfo)
-		{
-			VoteReminder reminderForThisChannel = FindReminder(commandContext);
-
-			if (reminderForThisChannel == null)
-			{
-				return NO_REMINDER_IN_CHANNEL_MESSAGE;
-			}
-
-			reminderForThisChannel.UpdateReminderData(reminderInfo);
-			Program.DBManager.UpdateReminder(reminderForThisChannel.ReminderData);
-			reminderForThisChannel.TryStartReminderThread();
-
-			return REMINDER_WAS_UPDATED_MESSAGE;
-		}
-
-		public string TrySetReminderConfigData (SocketCommandContext commandContext, int voteDuration, string voteFinishedMessage)
-		{
-			VoteReminder reminderForThisChannel = FindReminder(commandContext);
-
-			if (reminderForThisChannel == null)
-			{
-				return NO_REMINDER_IN_CHANNEL_MESSAGE;
-			}
-			
-			reminderForThisChannel.ReminderData.SetVoteConfigData(voteDuration, voteFinishedMessage);
-			Program.DBManager.UpdateReminder(reminderForThisChannel.ReminderData);
-			reminderForThisChannel.TryStartReminderThread();
-
-			return REMINDER_CONFIG_WAS_SET_UP_MESSAGE;
-		}
+		//Logic was changed, need to update separate stuff with separate commands. 17.12.2021. Artem Yurchenko
+		// public string TryUpdateChannelVoteReminder (SocketCommandContext commandContext, VoteReminderInfo reminderInfo)
+		// {
+		// 	VoteReminder reminderForThisChannel = FindReminder(commandContext);
+		//
+		// 	if (reminderForThisChannel == null)
+		// 	{
+		// 		return NO_REMINDER_IN_CHANNEL_MESSAGE;
+		// 	}
+		//
+		// 	reminderForThisChannel.UpdateReminderData(reminderInfo);
+		// 	Program.DBManager.UpdateReminder(reminderForThisChannel.ReminderData);
+		// 	reminderForThisChannel.TryStartReminderThread();
+		//
+		// 	return REMINDER_WAS_UPDATED_MESSAGE;
+		// }
 
 		private VoteReminder FindReminder (SocketCommandContext context)
 		{

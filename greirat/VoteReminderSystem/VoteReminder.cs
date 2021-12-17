@@ -8,14 +8,13 @@ namespace VoteReminderSystem
 {
 	public class VoteReminder
 	{
-		public VoteRemindData ReminderData { get; private set; }
-
-		private TimeSpan RemindTime { get; set; }
+		public VoteData ReminderData { get; private set; }
+		
 		private Task ReminderTimerTask { get; set; }
 		private CancellationTokenSource ReminderCancellationProvider { get; set; }
 		private CancellationToken ReminderCancellationToken { get; set; }
 
-		public VoteReminder (VoteRemindData reminderData)
+		public VoteReminder (VoteData reminderData)
 		{
 			ReminderData = reminderData;
 			SetUpCancellationMembers();
@@ -29,11 +28,8 @@ namespace VoteReminderSystem
 				SetUpCancellationMembers();
 			}
 
-			if (CheckIfCanStartReminderThread() == true)
-			{
-				ReminderTimerTask = new Task(RemindAboutVote);
-				ReminderTimerTask.Start();
-			}
+			ReminderTimerTask = new Task(RemindAboutVote);
+			ReminderTimerTask.Start();
 		}
 
 		public void CancelActualReminderThread ()
@@ -42,10 +38,11 @@ namespace VoteReminderSystem
 			ReminderTimerTask.Dispose();
 		}
 
-		public void UpdateReminderData (SimpleReminderInfo newData)
-		{
-			ReminderData.UpdateReminderData(newData);
-		}
+		//Logic was changed, need to update separate stuff with separate commands. 17.12.2021. Artem Yurchenko
+		// public void UpdateReminderData (VoteReminderInfo newData)
+		// {
+		// 	ReminderData.UpdateReminderData(newData);
+		// }
 
 		private void SetUpCancellationMembers ()
 		{
@@ -53,16 +50,9 @@ namespace VoteReminderSystem
 			ReminderCancellationToken = ReminderCancellationProvider.Token;
 		}
 
-		private bool CheckIfCanStartReminderThread ()
-		{
-			string timeForRemind = ReminderData.TimeToRemind;
-			return (string.IsNullOrEmpty(timeForRemind) == false) && (TimeSpan.TryParse(timeForRemind, out _) == true);
-		}
-
 		private async void RemindAboutVote ()
 		{
-			RemindTime = TimeSpan.Parse(ReminderData.TimeToRemind);
-			TimeSpan voteDuration = new(0, ReminderData.VoteDurationInMinutes, 0);
+			TimeSpan voteDuration = new(0, ReminderData.DurationInMinutes, 0);
 
 			while (true)
 			{
@@ -82,7 +72,7 @@ namespace VoteReminderSystem
 					continue;
 				}
 
-				await Program.BotClient.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, string.IsNullOrEmpty(ReminderData.RemindMessage) == false ? ReminderData.RemindMessage : "Let's order some food");
+				await Program.BotClient.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, string.IsNullOrEmpty(ReminderData.StartMessage) == false ? ReminderData.StartMessage : "Let's order some food");
 
 				try
 				{
@@ -93,14 +83,14 @@ namespace VoteReminderSystem
 					return;
 				}
 
-				await Program.BotClient.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, string.IsNullOrEmpty(ReminderData.VoteFinishMessage) == false ? ReminderData.VoteFinishMessage : "Food voting was finished");
+				await Program.BotClient.SendMessage(ReminderData.GuildID, ReminderData.ChannelID, string.IsNullOrEmpty(ReminderData.FinishMessage) == false ? ReminderData.FinishMessage : "Food voting was finished");
 			}
 		}
 
 		private TimeSpan CalculateTimeToRemind ()
 		{
 			TimeSpan currentTime = DateTime.Now.TimeOfDay;
-			TimeSpan timeToWait = currentTime < RemindTime ? RemindTime.Subtract(currentTime) : DateTime.Today.Subtract(currentTime).TimeOfDay + RemindTime;
+			TimeSpan timeToWait = currentTime < ReminderData.StartTime ? ReminderData.StartTime.Subtract(currentTime) : DateTime.Today.Subtract(currentTime).TimeOfDay + ReminderData.StartTime;
 
 			return timeToWait;
 		}

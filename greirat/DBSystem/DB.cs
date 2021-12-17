@@ -14,10 +14,9 @@ namespace DBSystem
 	public class DB : DbContext
 	{
 		private const string PATH_TO_DATA_DB_FILE = @"Data Source=data.db";
-		private const string TODAY_DATA_STRING_TEMPLATE = "{0}-{1}-{2}";
 
 		private DbSet<OrderData> Orders { get; set; }
-		private DbSet<VoteRemindData> RemindersData { get; set; }
+		private DbSet<VoteData> Votes { get; set; }
 
 		protected override void OnConfiguring (DbContextOptionsBuilder options)
 		{
@@ -92,36 +91,47 @@ namespace DBSystem
 			return OrderCommandsModuleDatabase.ORDER_WAS_REMOVED;
 		}
 
-		public VoteRemindData AddNewReminder (SocketCommandContext messageData, SimpleReminderInfo reminderInfo)
+		public VoteData AddNewReminder (SocketCommandContext messageData, VoteReminderInfo reminderInfo)
 		{
-			EntityEntry<VoteRemindData> createdReminder = Add(new VoteRemindData(messageData, reminderInfo));
+			VoteData newVote = new()
+			{
+				GuildID = messageData.Guild.Id,
+				ChannelID = messageData.Message.Channel.Id,
+				StartTime = reminderInfo.StartTime,
+				StartMessage = reminderInfo.StartMessage,
+				DurationInMinutes = reminderInfo.DurationInSeconds,
+				FinishMessage = reminderInfo.FinishMessage
+			};
+
+			Add(newVote);
 			SaveChanges();
-			return new VoteRemindData(createdReminder.Entity);
+			return newVote;
 		}
 
-		public Stack<VoteRemindData> GetAllRemindersFromDB ()
+		public Stack<VoteData> GetAllRemindersFromDB ()
 		{
-			return new(RemindersData);
+			return new(Votes);
 		}
 
-		public void DeleteReminder (VoteRemindData reminderDataToDelete)
+		public void DeleteReminder (VoteData reminderDataToDelete)
 		{
 			Remove(reminderDataToDelete);
 			SaveChanges();
 		}
 
-		public void UpdateReminder (VoteRemindData reminderToUpdate)
-		{
-			VoteRemindData reminder = RemindersData.SingleOrDefault(reminderData => reminderData.ReminderID == reminderToUpdate.ReminderID);
-
-			if (reminder == null)
-			{
-				return;
-			}
-
-			reminder.UpdateReminderData(reminderToUpdate);
-			SaveChanges();
-		}
+		//Logic was changed, need to update separate stuff with separate commands. 17.12.2021. Artem Yurchenko
+		// public void UpdateReminder (VoteData reminderToUpdate)
+		// {
+		// 	VoteData reminder = Votes.SingleOrDefault(reminderData => reminderData.ID == reminderToUpdate.ID);
+		//
+		// 	if (reminder == null)
+		// 	{
+		// 		return;
+		// 	}
+		//
+		// 	reminder.UpdateReminderData(reminderToUpdate);
+		// 	SaveChanges();
+		// }
 
 		private Queue<OrderData> StoreOrdersDataInQueue (IEnumerator<OrderData> records)
 		{

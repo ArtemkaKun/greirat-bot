@@ -40,7 +40,7 @@ namespace Helpers
 
 		public StringBuilder FormOrdersSortedShowData (Queue<OrderData> todayOrders)
 		{
-			using IEnumerator<OrderData> todayOrdersSorted = todayOrders.OrderBy(data => data.OrderText).GetEnumerator();
+			using IEnumerator<OrderData> todayOrdersSorted = todayOrders.OrderBy(data => data.Text).GetEnumerator();
 			FillTableWithData(todayOrdersSorted);
 
 			return GetAsciiTableBuilder(ShowOrderResultsDataTable);
@@ -48,7 +48,7 @@ namespace Helpers
 
 		public StringBuilder FormOrdersSummaryShowData (Queue<OrderData> todayOrders)
 		{
-			using IEnumerator<(string Order, int Count)> todayOrdersSorted = todayOrders.GroupBy(data => data.OrderText).Select(group => (group.Key, group.Count())).GetEnumerator();
+			using IEnumerator<(string Order, int Count)> todayOrdersSorted = todayOrders.GroupBy(data => data.Text).Select(group => (group.Key, group.Count())).GetEnumerator();
 			FillTableWithData(todayOrdersSorted);
 
 			return GetAsciiTableBuilder(ShowOrderCountsDataTable);
@@ -116,9 +116,9 @@ namespace Helpers
 		private void CreateTableRowFromOrderData (OrderData order)
 		{
 			DataRow tempDataRow = ShowOrderResultsDataTable.NewRow();
-			tempDataRow[ORDER_ID_COLUMN_NAME] = order.OrderID;
-			tempDataRow[PERSON_NAME_COLUMN_NAME] = order.PersonName;
-			tempDataRow[ORDER_TEXT_COLUMN_NAME] = order.OrderText;
+			tempDataRow[ORDER_ID_COLUMN_NAME] = order.ID;
+			tempDataRow[PERSON_NAME_COLUMN_NAME] = order.OwnerName;
+			tempDataRow[ORDER_TEXT_COLUMN_NAME] = order.Text;
 			ShowOrderResultsDataTable.Rows.Add(tempDataRow);
 		}
 	}

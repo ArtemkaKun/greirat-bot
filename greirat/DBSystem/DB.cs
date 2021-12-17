@@ -31,7 +31,14 @@ namespace DBSystem
 
 		public string AddNewOrder (SimpleOrderInfo orderInfo)
 		{
-			Add(new OrderData(GetTodayDateInStringForm(), orderInfo.OrderOwner, orderInfo.OrderMessage));
+			OrderData newOrder = new()
+			{
+				Day = DateTime.Today,
+				OwnerName = orderInfo.OrderOwner,
+				Text = orderInfo.OrderMessage
+			};
+
+			Add(newOrder);
 			SaveChanges();
 
 			return OrderCommandsModuleDatabase.ORDER_WAS_SAVED_MESSAGE;
@@ -44,7 +51,7 @@ namespace DBSystem
 
 		public Queue<OrderData> GetTodayOrders (string userName)
 		{
-			return StoreOrdersDataInQueue(GetTodayOrdersEnumerator(order => order.PersonName == userName));
+			return StoreOrdersDataInQueue(GetTodayOrdersEnumerator(order => order.OwnerName == userName));
 		}
 
 		public string TryUpdateOrderData (SimpleOrderInfo orderInfo)
@@ -56,7 +63,15 @@ namespace DBSystem
 				return OrderCommandsModuleDatabase.ORDER_UPDATE_FAILED;
 			}
 
-			orderToUpdate.OrderText = orderInfo.OrderMessage;
+			OrderData updatedOrder = new()
+			{
+				Day = DateTime.Today,
+				OwnerName = orderInfo.OrderOwner,
+				Text = orderInfo.OrderMessage
+			};
+
+			Remove(orderToUpdate);
+			Add(updatedOrder);
 			SaveChanges();
 
 			return OrderCommandsModuleDatabase.ORDER_WAS_UPDATED_MESSAGE;
@@ -122,25 +137,17 @@ namespace DBSystem
 
 		private IEnumerator<OrderData> GetTodayOrdersEnumerator (Expression<Func<OrderData, bool>> additionalCheckExpression = null)
 		{
-			string todayDate = GetTodayDateInStringForm();
-
 			if (additionalCheckExpression == null)
 			{
-				return Orders.Where(order => order.OrderDate == todayDate).GetEnumerator();
+				return Orders.Where(order => order.Day == DateTime.Today).GetEnumerator();
 			}
 
-			return Orders.Where(order => order.OrderDate == todayDate).Where(additionalCheckExpression).GetEnumerator();
-		}
-
-		private string GetTodayDateInStringForm ()
-		{
-			DateTime todayDay = DateTime.Today;
-			return string.Format(TODAY_DATA_STRING_TEMPLATE, todayDay.Day.ToString(), todayDay.Month.ToString(), todayDay.Year.ToString());
+			return Orders.Where(order => order.Day == DateTime.Today).Where(additionalCheckExpression).GetEnumerator();
 		}
 
 		private OrderData FindOrder (string requestFromUsername, int idOfOrder)
 		{
-			return Orders.SingleOrDefault(order => (order.PersonName == requestFromUsername) && (order.OrderID == idOfOrder));
+			return Orders.SingleOrDefault(order => (order.OwnerName == requestFromUsername) && (order.ID == idOfOrder));
 		}
 	}
 }

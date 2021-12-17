@@ -37,7 +37,7 @@ public class DB : DbContext
 
 	public string TryUpdateOrderData (OrderInfo orderInfo)
 	{
-		OrderData orderToUpdate = FindOrder(orderInfo);
+		OrderData? orderToUpdate = FindOrder(orderInfo);
 
 		if (orderToUpdate == null)
 		{
@@ -58,7 +58,7 @@ public class DB : DbContext
 		{
 			Day = DateTime.Today,
 			OwnerName = orderInfo.OwnerName,
-			Text = orderInfo.Text
+			Text = orderInfo.Text ?? ""
 		};
 
 		return newOrder;
@@ -66,14 +66,14 @@ public class DB : DbContext
 
 	public string TryDeleteOrderData (OrderInfo orderInfo)
 	{
-		OrderData orderToUpdate = FindOrder(orderInfo);
+		OrderData? orderToDelete = FindOrder(orderInfo);
 
-		if (orderToUpdate == null)
+		if (orderToDelete == null)
 		{
 			return OrderCommandsModuleDatabase.ORDER_DELETE_FAILED;
 		}
 
-		Remove(orderToUpdate);
+		Remove(orderToDelete);
 		SaveChanges();
 
 		return OrderCommandsModuleDatabase.ORDER_WAS_REMOVED;
@@ -81,12 +81,12 @@ public class DB : DbContext
 
 	public Queue<OrderData> GetTodayOrders ()
 	{
-		return StoreOrdersDataInQueue(GetTodayOrdersEnumerator());
+		return StoreOrdersDataInQueue(GetTodayOrdersEnumerable());
 	}
 
 	public Queue<OrderData> GetTodayOrders (string userName)
 	{
-		return StoreOrdersDataInQueue(GetTodayOrdersEnumerator(order => order.OwnerName == userName));
+		return StoreOrdersDataInQueue(GetTodayOrdersEnumerable(order => order.OwnerName == userName));
 	}
 
 	public VoteData AddNewReminder (SocketCommandContext messageData, VoteReminderInfo reminderInfo)
@@ -108,7 +108,7 @@ public class DB : DbContext
 
 	public Stack<VoteData> GetAllRemindersFromDB ()
 	{
-		return new(Votes);
+		return new Stack<VoteData>(Votes);
 	}
 
 	public void DeleteReminder (VoteData reminderDataToDelete)
@@ -131,29 +131,27 @@ public class DB : DbContext
 	// 	SaveChanges();
 	// }
 
-	private Queue<OrderData> StoreOrdersDataInQueue (IEnumerator<OrderData> records)
+	private Queue<OrderData> StoreOrdersDataInQueue (IEnumerable<OrderData> records)
 	{
+		using IEnumerator<OrderData> ordersEnumerator = records.GetEnumerator();
 		Queue<OrderData> todayOrders = new();
 
-		while (records.MoveNext() == true)
+		while (ordersEnumerator.MoveNext() == true)
 		{
-			todayOrders.Enqueue(records.Current);
+			todayOrders.Enqueue(ordersEnumerator.Current);
 		}
 
 		return todayOrders;
 	}
 
-	private IEnumerator<OrderData> GetTodayOrdersEnumerator (Expression<Func<OrderData, bool>> additionalCheckExpression = null)
+	private IEnumerable<OrderData> GetTodayOrdersEnumerable (Expression<Func<OrderData, bool>>? additionalCheckExpression = null)
 	{
-		if (additionalCheckExpression == null)
-		{
-			return Orders.Where(order => order.Day == DateTime.Today).GetEnumerator();
-		}
+		IQueryable<OrderData> todayOrdersQuery = Orders.Where(order => order.Day == DateTime.Today);
 
-		return Orders.Where(order => order.Day == DateTime.Today).Where(additionalCheckExpression).GetEnumerator();
+		return additionalCheckExpression == null ? todayOrdersQuery : todayOrdersQuery.Where(additionalCheckExpression);
 	}
 
-	private OrderData FindOrder (OrderInfo orderInfo)
+	private OrderData? FindOrder (OrderInfo orderInfo)
 	{
 		return Orders.SingleOrDefault(order => (order.OwnerName == orderInfo.OwnerName) && (order.ID == orderInfo.ID));
 	}
